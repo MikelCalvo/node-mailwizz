@@ -1,4 +1,6 @@
 
+# node-mailwizz
+
 I took [ntlzz93's package](https://github.com/ntlzz93/node-mailwizz-sdk) and added some more features.
 
 Current version is 0.9.0, I will add all the functions before the launch of 1.0.9
@@ -250,4 +252,3 @@ lists.update("LIST-UNIQUE-ID", newInfo)
         //handle error here
     });
 ```
-# node-mailwizz
