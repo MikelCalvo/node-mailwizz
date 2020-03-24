@@ -1,4 +1,4 @@
-const Request = require('./Request');
+const Request = require("./Request");
 
 class ListSubscribers extends Request {
     constructor(config) {
@@ -53,6 +53,14 @@ class ListSubscribers extends Request {
     delete(listUid, subscriberUid) {
         this.method = Request.Type.DELETE;
         this.url = `/lists/${listUid}/subscribers/${subscriberUid}`;
+
+        return this.send();
+    }
+
+    unsubscribe(listUid, subscriberUid) {
+        this.method = Request.Type.PUT;
+        this.url = `/lists/${listUid}/subscribers/${subscriberUid}/unsubscribe`;
+        this.data = {};
 
         return this.send();
     }
