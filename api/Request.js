@@ -40,6 +40,10 @@ class Request {
             this.data = {};
         }
 
+        // remove headers, so that signature won't be spoiled on subsequent requests
+        delete this.header['X-MW-SIGNATURE'];
+        delete this.header['X-HTTP-Method-Override'];
+
         this.__sign();
         this.__setXHttpMethodOverride();
 
@@ -49,7 +53,7 @@ class Request {
             url: this.url,
             headers: this.header
         };
-        
+
         if (this.data) {
             options.form = this.data;
         }
@@ -71,7 +75,7 @@ class Request {
                     return reject(err.response.body);
                 });
         });
-        
+
     }
 
     __setXHttpMethodOverride() {
@@ -85,21 +89,18 @@ class Request {
         let paramPost = this.data || {};
         let paramGet = this.query || {};
         let separator;
-        
+
         if (this.method === METHOD.GET && Object.keys(paramGet).length > 0) {
             separator = '&';
+            apiUrl += ('?' + querystring.stringify(paramGet));
         } else {
             separator = '?';
         }
-        
+
         let params = Object.assign({}, specialHeaderParams, paramPost);
         params = encrypt.ksort(params);
 
         var apiUrl = this.config.baseUrl + this.url;
-
-        if (method === METHOD.GET) {
-            apiUrl += ('?' + querystring.stringify(paramGet));
-        }
 
         let signatureString = `${method} ${apiUrl}${separator}${encrypt.serialize(params)}`;
         let hash = encrypt.hmac_sha(privateKey, signatureString);
