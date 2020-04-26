@@ -1,4 +1,5 @@
 
+[![NPM version][npm-version-image]][npm-url]
 # node-mailwizz
 
 I took [ntlzz93's package](https://github.com/ntlzz93/node-mailwizz-sdk) and added some more features.
@@ -27,7 +28,7 @@ How to create a subscriber:
 const subscribers = new mailWizz.ListSubscribers(config);
 
 var userInfo = { //replace the values with your user info
-    EMAIL: "hi@mikelcalvo.me",
+    EMAIL: "contact@mikelcalvo.net",
     FNAME: "Mikel",
     LNAME: "Calvo",
     CUSTOM: "custom"
@@ -48,7 +49,7 @@ How to update a subscriber:
 const subscribers = new mailWizz.ListSubscribers(config);
 
 var userInfo = { //replace the values with your user's new info
-    EMAIL: "hi@mikelcalvo.me",
+    EMAIL: "contact@mikelcalvo.net",
     FNAME: "Mikel",
     LNAME: "Calvo",
     CUSTOM: "custom"
@@ -69,6 +70,19 @@ How to delete a subscriber:
 const subscribers = new mailWizz.ListSubscribers(config);
 
 subscribers.delete("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
+    .then(function(result) {
+        //TODO: do what you want
+    })
+    .catch(function(err) {
+        //handle error here
+    });
+```
+
+How to unsubscribe:
+```
+const subscribers = new mailWizz.ListSubscribers(config);
+
+subscribers.unsubscribe("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
     .then(function(result) {
         //TODO: do what you want
     })
@@ -158,15 +172,15 @@ var listInfo = { //Replace the values with your list info
     optIn: "single", //single or double
     optOut: "single", //single or double
     fromName: "Mikel Calvo", //Required
-    fromEmail: "hi@mikelcalvo.me", //Required
-    replyTo: "hi@mikelcalvo.me", //Required
+    fromEmail: "contact@mikelcalvo.net", //Required
+    replyTo: "contact@mikelcalvo.net", //Required
     subject: "Hi!",
     //notification when new subscriber added
     notificationSubscribe: "yes", //yes or no
     notificationUnsubscribe: "yes", //yes or no
     //where to send the notification
-    notificationSubscribeTo: "hi@mikelcalvo.me",
-    notificationUnsubscribeTo: "hi@mikelcalvo.me",
+    notificationSubscribeTo: "contact@mikelcalvo.net",
+    notificationUnsubscribeTo: "contact@mikelcalvo.net",
     //This is optional, if not set customer company data will be used:
     companyName: "Mikel Calvo SL", //required
     companyCountry: "Spain", //required
@@ -223,15 +237,15 @@ var newInfo = { //Replace the values with your updated list info
     optIn: "single", //single or double
     optOut: "single", //single or double
     fromName: "Mikel Calvo", //Required
-    fromEmail: "hi@mikelcalvo.me", //Required
-    replyTo: "hi@mikelcalvo.me", //Required
+    fromEmail: "contact@mikelcalvo.net", //Required
+    replyTo: "contact@mikelcalvo.net", //Required
     subject: "Hi!",
     //notification when new subscriber added
     notificationSubscribe: "yes", //yes or no
     notificationUnsubscribe: "yes", //yes or no
     //where to send the notification
-    notificationSubscribeTo: "hi@mikelcalvo.me",
-    notificationUnsubscribeTo: "hi@mikelcalvo.me",
+    notificationSubscribeTo: "contact@mikelcalvo.net",
+    notificationUnsubscribeTo: "contact@mikelcalvo.net",
     //This is optional, if not set customer company data will be used:
     companyName: "Mikel Calvo SL", //required
     companyCountry: "Spain", //required
@@ -252,3 +266,5 @@ lists.update("LIST-UNIQUE-ID", newInfo)
         //handle error here
     });
 ```
+[npm-url]: https://npmjs.org/package/node-mailwizz
+[npm-version-image]: http://img.shields.io/npm/v/node-mailwizz.svg?style=flat
