@@ -49,7 +49,7 @@ class Request {
             url: this.url,
             headers: this.header
         };
-        
+
         if (this.data) {
             options.form = this.data;
         }
@@ -71,7 +71,7 @@ class Request {
                     return reject(err.response.body);
                 });
         });
-        
+
     }
 
     __setXHttpMethodOverride() {
@@ -85,23 +85,22 @@ class Request {
         let paramPost = this.data || {};
         let paramGet = this.query || {};
         let separator;
-        
-        if (this.method === METHOD.GET && Object.keys(paramGet).length > 0) {
-            separator = '&';
-        } else {
-            separator = '?';
-        }
-        
+
         let params = Object.assign({}, specialHeaderParams, paramPost);
         params = encrypt.ksort(params);
 
         var apiUrl = this.config.baseUrl + this.url;
 
-        if (method === METHOD.GET) {
+        if (this.method === METHOD.GET && Object.keys(paramGet).length > 0) {
             apiUrl += ('?' + querystring.stringify(paramGet));
+            separator = '&';
+        } else {
+            separator = '?';
         }
 
         let signatureString = `${method} ${apiUrl}${separator}${encrypt.serialize(params)}`;
+        console.log(apiUrl);
+        console.log(signatureString);
         let hash = encrypt.hmac_sha(privateKey, signatureString);
 
         this.header['X-MW-SIGNATURE'] = hash;
