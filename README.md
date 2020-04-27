@@ -4,7 +4,7 @@
 
 I took [ntlzz93's package](https://github.com/ntlzz93/node-mailwizz-sdk) and added some more features.
 
-Current version is 0.9.1, I will add all the functions before the launch of 1.0.0
+Current version is 1.0.0, feel free to make a pull request  or open an issue.
 
 To to know which API is available and params, go to `api` directory.
 
