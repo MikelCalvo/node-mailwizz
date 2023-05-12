@@ -1,29 +1,29 @@
 {
-  "name": "node-mailwizz",
-  "version": "1.0.0",
-  "description": "MailWizz implementation",
-  "author": "Mikel Calvo <hi@mikelcalvo.me> (www.mikelcalvo.me)",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mikelcalvo/node-mailwizz.git"
-  },
-  "keywords": [
-    "mailwizz-api"
-  ],
-  "author": "Mikel Calvo",
-  "license": "DO WHATEVER YOU WANT WITH THE CODE",
-  "readmeFilename": "README.md",
-  "bugs": {
-    "url": "https://github.com/mikelcalvo/node-mailwizz/issues"
-  },
-  "dependencies": {
-    "moment": "~2.24.0",
-    "request": "~2.88.0",
-    "request-promise": "~4.2.5"
-  },
-  "homepage": "https://github.com/mikelcalvo/node-mailwizz#readme"
+	"name": "node-mailwizz",
+	"version": "1.0.0",
+	"description": "MailWizz implementation",
+	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
+	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
+	"license": "DO WHATEVER YOU WANT WITH THE CODE",
+	"readmeFilename": "README.md",
+	"homepage": "https://github.com/mikelcalvo/node-mailwizz#readme",
+	"bugs": {
+		"url": "https://github.com/mikelcalvo/node-mailwizz/issues"
+	},
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"format": "prettier --write \"**/*.js\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mikelcalvo/node-mailwizz.git"
+	},
+	"dependencies": {
+		"request": "~2.88.0",
+		"request-promise": "~4.2.5"
+	},
+	"devDependencies": {
+		"prettier": "^2.8.8"
+	}
 }

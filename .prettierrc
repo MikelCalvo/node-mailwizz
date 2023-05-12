@@ -1,0 +1,37 @@
+{
+	"trailingComma": "none",
+	"tabWidth": 2,
+	"semi": true,
+	"singleQuote": false,
+	"bracketSpacing": true,
+	"arrowParens": "avoid",
+	"printWidth": 80,
+	"useTabs": true,
+	"bracketSameLine": false,
+	"overrides": [
+	  {
+		"files": "*.{js,jsx}",
+		"options": {
+		  "parser": "babel"
+		}
+	  },
+	  {
+		"files": "*.{ts,tsx}",
+		"options": {
+		  "parser": "typescript"
+		}
+	  },
+	  {
+		"files": "*.json",
+		"options": {
+		  "parser": "json"
+		}
+	  },
+	  {
+		"files": "*.md",
+		"options": {
+		  "parser": "markdown"
+		}
+	  }
+	]
+  }
