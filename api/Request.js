@@ -1,8 +1,6 @@
-let encrypt = require("../utils/encrypt");
-let rp = require("request-promise");
-
-const url = require("url");
 const querystring = require("querystring");
+let encrypt = require("../utils/encrypt");
+let axios = require("axios");
 
 const METHOD = {
 	GET: "GET",
@@ -34,7 +32,7 @@ class Request {
 		return METHOD;
 	}
 
-	send() {
+	async send() {
 		if (this.data && this.method === METHOD.GET) {
 			this.query = this.data;
 			this.data = {};
@@ -45,32 +43,25 @@ class Request {
 
 		let options = {
 			method: this.method,
-			baseUrl: this.config.baseUrl,
+			baseURL: this.config.baseUrl,
 			url: this.url,
 			headers: this.header
 		};
 
-		if (this.data) {
-			options.form = this.data;
+		if (this.method === METHOD.GET) {
+			options.params = this.query;
+		} else {
+			options.data = this.data;
 		}
 
-		if (this.query) {
-			options.qs = this.query;
+		try {
+			const response = await axios(options);
+			return response.data;
+		} catch (err) {
+			if (!err.response) throw err;
+			if (!err.response.data) throw err.response;
+			throw err.response.data;
 		}
-
-		delete options.uri;
-
-		return new Promise((resolve, reject) => {
-			rp(options)
-				.then(result => {
-					return resolve(result);
-				})
-				.catch(err => {
-					if (!err.response) return reject(err);
-					if (!err.response.body) return reject(err.response);
-					return reject(err.response.body);
-				});
-		});
 	}
 
 	__setXHttpMethodOverride() {
@@ -81,8 +72,9 @@ class Request {
 		let specialHeaderParams = this.header;
 		let privateKey = this.config.secret;
 		let method = this.method;
-		let paramPost = this.data || {};
-		let paramGet = this.query || {};
+		let paramPost = this.method === METHOD.GET ? {} : this.data || {};
+		let paramGet =
+			this.method === METHOD.GET ? this.data || {} : this.query || {};
 		let separator;
 
 		let params = Object.assign({}, specialHeaderParams, paramPost);
