@@ -1,6 +1,7 @@
 const querystring = require("querystring");
 let encrypt = require("../utils/encrypt");
 let axios = require("axios");
+let qs = require("qs");
 
 const METHOD = {
 	GET: "GET",
@@ -51,7 +52,8 @@ class Request {
 		if (this.method === METHOD.GET) {
 			options.params = this.query;
 		} else {
-			options.data = this.data;
+			options.data = qs.stringify(this.data);
+			options.headers["Content-Type"] = "application/x-www-form-urlencoded";
 		}
 
 		try {
