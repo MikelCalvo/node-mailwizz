@@ -30,7 +30,7 @@ exports.serialize = function serialize(obj, prefix) {
 		.join("&")
 		.replace(/%20/g, "+")
 		.replace(/!/g, "%21")
-		.replace(/'/, "%27");
+		.replace(/'/g, "%27");
 };
 
 exports.ksort = function ksort(obj) {
