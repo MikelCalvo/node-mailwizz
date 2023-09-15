@@ -1,6 +1,6 @@
 {
 	"name": "node-mailwizz",
-	"version": "1.1.6",
+	"version": "1.1.8",
 	"description": "MailWizz implementation",
 	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
 	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
@@ -20,7 +20,7 @@
 		"url": "git+https://github.com/mikelcalvo/node-mailwizz.git"
 	},
 	"dependencies": {
-		"axios": "^1.4.0",
+		"axios": "^1.5.0",
 		"qs": "^6.11.2"
 	},
 	"devDependencies": {
