@@ -1,18 +1,19 @@
-
 [![NPM version][npm-version-image]][npm-url]
+
 # node-mailwizz
 
 I took [ntlzz93's package](https://github.com/ntlzz93/node-mailwizz-sdk) and added some more features.
 
-Current version is 2.0.0, feel free to make a pull request  or open an issue.
+Feel free to make a pull request or open an issue.
 
 To to know which API is available and params, go to `api` directory.
 
 This SDK are using native Promise instead of Callback, so you can async/await as you want
 
-How to use
-====================
+# How to use
+
 First, you need to add the configuration:
+
 ```
 const mailWizz = require("node-mailwizz");
 
@@ -24,6 +25,7 @@ const config = {
 ```
 
 How to create a subscriber:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -45,6 +47,7 @@ subscribers.create("LIST-UNIQUE-ID", userInfo)
 ```
 
 How to update a subscriber:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -66,6 +69,7 @@ subscribers.update("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID", userInfo)
 ```
 
 How to delete a subscriber:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -79,6 +83,7 @@ subscribers.delete("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 ```
 
 How to unsubscribe:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -92,6 +97,7 @@ subscribers.unsubscribe("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 ```
 
 How to get your subscribers:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -108,6 +114,7 @@ subscribers.getSubscribers("LIST-UNIQUE-ID", 1, 10)
 ```
 
 How to get a subscriber with their id:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -121,6 +128,7 @@ subscribers.getSubscriber("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 ```
 
 How to get a subscriber with their email:
+
 ```
 const subscribers = new mailWizz.ListSubscribers(config);
 
@@ -134,6 +142,7 @@ subscribers.emailSearch("LIST-UNIQUE-ID", "SUBSCRIBER-EMAIL")
 ```
 
 How to get your lists:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -150,6 +159,7 @@ lists.getLists(1, 10)
 ```
 
 If you have your list id you can directly get it:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -163,6 +173,7 @@ lists.getList("LIST-UNIQUE-ID")
 ```
 
 How to create a new list:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -203,6 +214,7 @@ lists.create(listInfo)
 ```
 
 How to copy a list:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -216,6 +228,7 @@ lists.copy("LIST-UNIQUE-ID")
 ```
 
 How to remove a list:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -227,7 +240,9 @@ lists.delete("LIST-UNIQUE-ID")
         //handle error here
     });
 ```
+
 How to update a list:
+
 ```
 const lists = new mailWizz.Lists(config);
 
@@ -266,5 +281,6 @@ lists.update("LIST-UNIQUE-ID", newInfo)
         //handle error here
     });
 ```
+
 [npm-url]: https://npmjs.org/package/node-mailwizz
 [npm-version-image]: http://img.shields.io/npm/v/node-mailwizz.svg?style=flat
