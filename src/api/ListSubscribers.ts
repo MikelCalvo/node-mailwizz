@@ -1,11 +1,11 @@
-const Request = require("./Request");
+import Request from "./Request";
 
 class ListSubscribers extends Request {
-	constructor(config) {
+	constructor(config: any) {
 		super(config);
 	}
 
-	getSubscribers(listUid, page, perPage) {
+	getSubscribers(listUid: string, page: number, perPage: number): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = `/lists/${listUid}/subscribers`;
 		this.data = {
@@ -16,7 +16,7 @@ class ListSubscribers extends Request {
 		return this.send();
 	}
 
-	getSubscriber(listUid, subscriberUid) {
+	getSubscriber(listUid: string, subscriberUid: string): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = `/lists/${listUid}/subscribers/${subscriberUid}`;
 		this.data = {};
@@ -24,7 +24,7 @@ class ListSubscribers extends Request {
 		return this.send();
 	}
 
-	emailSearch(listUid, subscriberEmail) {
+	emailSearch(listUid: string, subscriberEmail: string): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = `/lists/${listUid}/subscribers/search-by-email`;
 		this.data = {
@@ -34,7 +34,7 @@ class ListSubscribers extends Request {
 		return this.send();
 	}
 
-	create(listUid, data) {
+	create(listUid: string, data: any): Promise<any> {
 		this.method = Request.Type.POST;
 		this.url = `/lists/${listUid}/subscribers`;
 		this.data = data;
@@ -42,7 +42,7 @@ class ListSubscribers extends Request {
 		return this.send();
 	}
 
-	update(listUid, subscriberUid, data) {
+	update(listUid: string, subscriberUid: string, data: any): Promise<any> {
 		this.method = Request.Type.PUT;
 		this.url = `/lists/${listUid}/subscribers/${subscriberUid}`;
 		this.data = data;
@@ -50,14 +50,14 @@ class ListSubscribers extends Request {
 		return this.send();
 	}
 
-	delete(listUid, subscriberUid) {
+	delete(listUid: string, subscriberUid: string): Promise<any> {
 		this.method = Request.Type.DELETE;
 		this.url = `/lists/${listUid}/subscribers/${subscriberUid}`;
 
 		return this.send();
 	}
 
-	unsubscribe(listUid, subscriberUid) {
+	unsubscribe(listUid: string, subscriberUid: string): Promise<any> {
 		this.method = Request.Type.PUT;
 		this.url = `/lists/${listUid}/subscribers/${subscriberUid}/unsubscribe`;
 		this.data = {};
@@ -66,4 +66,4 @@ class ListSubscribers extends Request {
 	}
 }
 
-module.exports = ListSubscribers;
+export default ListSubscribers;

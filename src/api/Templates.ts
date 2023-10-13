@@ -1,13 +1,14 @@
-const Request = require("./Request");
+import { Config } from "mailtrain-interface";
+import Request from "./Request";
 
-const path = "/templates";
+const path: string = "./src/api/templates";
 
 class Template extends Request {
-	constructor(config) {
+	constructor(config: Config) {
 		super(config);
 	}
 
-	getTemplates(page = 1, limit = 10) {
+	getTemplates(page = 1, limit = 10): Promise<any> {
 		this.url = path;
 		this.method = Request.Type.GET;
 		this.data = {
@@ -18,7 +19,7 @@ class Template extends Request {
 		return this.send();
 	}
 
-	getTemplate(templateUid) {
+	getTemplate(templateUid: string): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = `${path}/${templateUid}`;
 		this.data = {};
@@ -27,4 +28,4 @@ class Template extends Request {
 	}
 }
 
-module.exports = Template;
+export default Template;

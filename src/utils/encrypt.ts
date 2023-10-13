@@ -4,15 +4,15 @@
 
 const createHmac = require("crypto").createHmac;
 
-exports.hmac_sha = function hmac_sha(key, content) {
+function hmac_sha(key: string, content: string): string {
 	return createHmac("sha1", key).update(content).digest("hex");
-};
+}
 
-exports.base64Encode = function base64Encode(string) {
-	return Buffer(string).toString("base64");
-};
+function base64Encode(string: string): string {
+	return Buffer.from(string).toString("base64");
+}
 
-exports.serialize = function serialize(obj, prefix) {
+function serialize(obj: Record<string, any>, prefix?: string): string {
 	let str = [],
 		p;
 	for (p in obj) {
@@ -31,14 +31,21 @@ exports.serialize = function serialize(obj, prefix) {
 		.replace(/%20/g, "+")
 		.replace(/!/g, "%21")
 		.replace(/'/g, "%27");
-};
+}
 
-exports.ksort = function ksort(obj) {
-	let ordered = {};
+function ksort(obj: Record<string, any>): Record<string, any> {
+	let ordered: Record<string, any> = {};
 	Object.keys(obj)
 		.sort()
 		.forEach(function (key) {
 			ordered[key] = obj[key];
 		});
 	return ordered;
+}
+
+export default {
+	hmac_sha,
+	base64Encode,
+	serialize,
+	ksort,
 };

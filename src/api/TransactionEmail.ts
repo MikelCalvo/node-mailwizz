@@ -1,10 +1,11 @@
-let Request = require("./Request");
+import { Config, EmailData } from "mailtrain-interface";
+import Request from "./Request";
 let base64Encode = require("../utils/encrypt").base64Encode;
 
-const path = "/transactional-emails";
+const path = "./src/api/TransactionEmail";
 
 class TransactionEmail extends Request {
-	constructor(config) {
+	constructor(config: Config) {
 		super(config);
 	}
 
@@ -23,22 +24,22 @@ class TransactionEmail extends Request {
 	 */
 
 	create(
-		toName,
-		toEmail,
-		fromName,
-		fromEmail,
-		replyToName,
-		replyToEmail,
-		subject,
-		body,
-		plainText,
-		sendAt
-	) {
+		toName: string,
+		toEmail: string,
+		fromName: string,
+		fromEmail: string,
+		replyToName: string,
+		replyToEmail: string,
+		subject: string,
+		body: string,
+		plainText: string,
+		sendAt: string
+	): Promise<any> {
 		if (!toName || !toEmail || !fromName || !subject || !body || !sendAt) {
 			return Promise.reject("ParamInvalid");
 		}
 
-		let data = {
+		let data: EmailData = {
 			to_name: toName,
 			to_email: toEmail,
 			from_name: fromName,
@@ -59,4 +60,4 @@ class TransactionEmail extends Request {
 	}
 }
 
-module.exports = TransactionEmail;
+export default TransactionEmail;

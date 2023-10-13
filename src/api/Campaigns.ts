@@ -1,13 +1,14 @@
-const Request = require("./Request");
+import { CampaignInfo } from "mailtrain-interface";
+import Request from "./Request";
 
-const path = "/campaigns";
+const path: string = "./src/api/campaigns";
 
 class Campaigns extends Request {
-	constructor(config) {
+	constructor(config: any) {
 		super(config);
 	}
 
-	create(info) {
+	create(info: CampaignInfo): Promise<any> {
 		let postData = {
 			name: info.name, //required
 			type: info.type || "regular", //optional: regular or autoresponder
@@ -49,4 +50,4 @@ class Campaigns extends Request {
 	}
 }
 
-module.exports = Campaigns;
+export default Campaigns;
