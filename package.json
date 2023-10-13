@@ -1,6 +1,6 @@
 {
 	"name": "node-mailwizz",
-	"version": "1.1.8",
+	"version": "1.1.9",
 	"description": "MailWizz implementation",
 	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
 	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
