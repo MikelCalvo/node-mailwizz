@@ -1,7 +1,7 @@
 import Config from "./types/Config";
 import METHOD from "./utils/data";
 import { stringify } from "querystring";
-import encrypt from "./utils/encrypt";
+import { ksort, serialize, hmac_sha } from "./utils/encrypt";
 import axios, { AxiosRequestConfig } from "axios";
 let qs = require("qs");
 
@@ -82,7 +82,7 @@ class Request {
 		let separator;
 
 		let params = Object.assign({}, specialHeaderParams, paramPost);
-		params = encrypt.ksort(params);
+		params = ksort(params);
 
 		var apiUrl = this.config.baseUrl + this.url;
 
@@ -93,12 +93,12 @@ class Request {
 			separator = "?";
 		}
 
-		let signatureString = `${method} ${apiUrl}${separator}${encrypt.serialize(
+		let signatureString = `${method} ${apiUrl}${separator}${serialize(
 			params
 		)}`;
 		console.log(apiUrl);
 		console.log(signatureString);
-		let hash = encrypt.hmac_sha(privateKey, signatureString);
+		let hash = hmac_sha(privateKey, signatureString);
 
 		this.header["X-MW-SIGNATURE"] = hash;
 	}

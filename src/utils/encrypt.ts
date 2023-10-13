@@ -1,18 +1,17 @@
 /**
  * Encrypt
  */
+import {createHmac} from "crypto";
 
-const createHmac = require("crypto").createHmac;
-
-function hmac_sha(key: string, content: string): string {
+export function hmac_sha(key: string, content: string): string {
 	return createHmac("sha1", key).update(content).digest("hex");
 }
 
-function base64Encode(string: string): string {
+export function base64Encode(string: string): string {
 	return Buffer.from(string).toString("base64");
 }
 
-function serialize(obj: Record<string, any>, prefix?: string): string {
+export function serialize(obj: Record<string, any>, prefix?: string): string {
 	let str = [],
 		p;
 	for (p in obj) {
@@ -33,7 +32,7 @@ function serialize(obj: Record<string, any>, prefix?: string): string {
 		.replace(/'/g, "%27");
 }
 
-function ksort(obj: Record<string, any>): Record<string, any> {
+export function ksort(obj: Record<string, any>): Record<string, any> {
 	let ordered: Record<string, any> = {};
 	Object.keys(obj)
 		.sort()
@@ -42,10 +41,3 @@ function ksort(obj: Record<string, any>): Record<string, any> {
 		});
 	return ordered;
 }
-
-export default {
-	hmac_sha,
-	base64Encode,
-	serialize,
-	ksort,
-};

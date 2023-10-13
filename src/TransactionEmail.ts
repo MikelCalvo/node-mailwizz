@@ -1,7 +1,7 @@
 import Config from "./types/Config";
 import EmailData from "./types/EmailData";
 import Request from "./Request";
-let base64Encode = require("../utils/encrypt").base64Encode;
+import { base64Encode } from "../src/utils/encrypt";
 
 const path: string = "./src/TransactionEmail";
 
