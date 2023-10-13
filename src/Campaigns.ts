@@ -1,7 +1,7 @@
-import { CampaignInfo } from "mailtrain-interface";
+import CampaignInfo from "./types/CampaignInfo";
 import Request from "./Request";
 
-const path: string = "./src/api/campaigns";
+const path: string = "./src/campaigns";
 
 class Campaigns extends Request {
 	constructor(config: any) {

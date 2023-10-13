@@ -1,7 +1,7 @@
-import { Config } from "mailtrain-interface";
+import Config from "./types/Config";
 import Request from "./Request";
 
-const path: string = "./src/api/templates";
+const path: string = "./src/templates";
 
 class Template extends Request {
 	constructor(config: Config) {

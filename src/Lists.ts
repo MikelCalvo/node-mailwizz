@@ -1,7 +1,7 @@
-import { ListInfo } from "mailtrain-interface";
+import ListInfo from "./types/ListInfo";
 import Request from"./Request";
 
-const path: string = "./src/api/lists";
+const path: string = "./src/lists";
 
 class Lists extends Request {
 	constructor(config: any) {

@@ -1,8 +1,9 @@
-import { Config, EmailData } from "mailtrain-interface";
+import Config from "./types/Config";
+import EmailData from "./types/EmailData";
 import Request from "./Request";
 let base64Encode = require("../utils/encrypt").base64Encode;
 
-const path = "./src/api/TransactionEmail";
+const path: string = "./src/TransactionEmail";
 
 class TransactionEmail extends Request {
 	constructor(config: Config) {

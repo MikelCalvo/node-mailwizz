@@ -1,7 +1,7 @@
-import { Config } from "mailtrain-interface";
-import METHOD from "../utils/data";
+import Config from "./types/Config";
+import METHOD from "./utils/data";
 import { stringify } from "querystring";
-import encrypt from "../utils/encrypt";
+import encrypt from "./utils/encrypt";
 import axios, { AxiosRequestConfig } from "axios";
 let qs = require("qs");
 
