@@ -1,7 +1,7 @@
 import ListInfo from "./types/ListInfo";
 import Request from"./Request";
 
-const path: string = "./src/lists";
+const path: string = "/lists";
 
 class Lists extends Request {
 	constructor(config: any) {

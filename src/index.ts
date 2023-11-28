@@ -19,11 +19,3 @@ export type Config = _Config;
 export type EmailData = _EmailData;
 export type ListInfo = _ListInfo;
 export type CampaignInfo = _CampaignInfo;
-
-export default {
-	Campaigns,
-	Lists,
-	ListSubscribers,
-	Templates,
-	TransactionalEmails
-};

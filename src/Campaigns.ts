@@ -1,7 +1,7 @@
 import CampaignInfo from "./types/CampaignInfo";
 import Request from "./Request";
 
-const path: string = "./src/campaigns";
+const path: string = "/campaigns";
 
 class Campaigns extends Request {
 	constructor(config: any) {

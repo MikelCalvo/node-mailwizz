@@ -1,9 +1,9 @@
 import Config from "./types/Config";
 import EmailData from "./types/EmailData";
 import Request from "./Request";
-import { base64Encode } from "../src/utils/encrypt";
+import { base64Encode } from "./utils/encrypt";
 
-const path: string = "./src/TransactionEmail";
+const path: string = "/TransactionEmail";
 
 class TransactionEmail extends Request {
 	constructor(config: Config) {

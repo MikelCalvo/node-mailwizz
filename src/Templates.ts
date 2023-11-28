@@ -1,7 +1,7 @@
 import Config from "./types/Config";
 import Request from "./Request";
 
-const path: string = "./src/templates";
+const path: string = "/templates";
 
 class Template extends Request {
 	constructor(config: Config) {
