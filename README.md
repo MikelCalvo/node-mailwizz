@@ -15,8 +15,6 @@ This SDK are using native Promise instead of Callback, so you can async/await as
 First, you need to add the configuration:
 
 ```
-const mailWizz = require("node-mailwizz");
-
 const config = {
     publicKey: "publicKey",
     secret: "secretKey",
@@ -27,7 +25,9 @@ const config = {
 How to create a subscriber:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 var userInfo = { //replace the values with your user info
     EMAIL: "contact@mikelcalvo.net",
@@ -49,7 +49,9 @@ subscribers.create("LIST-UNIQUE-ID", userInfo)
 How to update a subscriber:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 var userInfo = { //replace the values with your user's new info
     EMAIL: "contact@mikelcalvo.net",
@@ -71,7 +73,9 @@ subscribers.update("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID", userInfo)
 How to delete a subscriber:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 subscribers.delete("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
     .then(function(result) {
@@ -85,7 +89,9 @@ subscribers.delete("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 How to unsubscribe:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 subscribers.unsubscribe("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
     .then(function(result) {
@@ -99,7 +105,9 @@ subscribers.unsubscribe("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 How to get your subscribers:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 /Value 1 is the page number you want to get
 //Value 10 is the items per package
@@ -116,7 +124,9 @@ subscribers.getSubscribers("LIST-UNIQUE-ID", 1, 10)
 How to get a subscriber with their id:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 subscribers.getSubscriber("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
     .then(function(result) {
@@ -130,7 +140,9 @@ subscribers.getSubscriber("LIST-UNIQUE-ID", "SUBSCRIBER-UNIQUE-ID")
 How to get a subscriber with their email:
 
 ```
-const subscribers = new mailWizz.ListSubscribers(config);
+import { ListSubscribers } from "mailwizz";
+
+const subscribers = new ListSubscribers(config);
 
 subscribers.emailSearch("LIST-UNIQUE-ID", "SUBSCRIBER-EMAIL")
     .then(function(result) {
@@ -144,7 +156,9 @@ subscribers.emailSearch("LIST-UNIQUE-ID", "SUBSCRIBER-EMAIL")
 How to get your lists:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 //Value 1 is the page number you want to get
 //Value 10 is the items per package
@@ -161,7 +175,9 @@ lists.getLists(1, 10)
 If you have your list id you can directly get it:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 lists.getList("LIST-UNIQUE-ID")
     .then(function(result) {
@@ -175,7 +191,9 @@ lists.getList("LIST-UNIQUE-ID")
 How to create a new list:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 var listInfo = { //Replace the values with your list info
     name: "Main List", //Required
@@ -183,15 +201,15 @@ var listInfo = { //Replace the values with your list info
     optIn: "single", //single or double
     optOut: "single", //single or double
     fromName: "Mikel Calvo", //Required
-    fromEmail: "contact@mikelcalvo.net", //Required
-    replyTo: "contact@mikelcalvo.net", //Required
+    fromEmail: "spam@mikelcalvo.net", //Required
+    replyTo: "spam@mikelcalvo.net", //Required
     subject: "Hi!",
     //notification when new subscriber added
     notificationSubscribe: "yes", //yes or no
     notificationUnsubscribe: "yes", //yes or no
     //where to send the notification
-    notificationSubscribeTo: "contact@mikelcalvo.net",
-    notificationUnsubscribeTo: "contact@mikelcalvo.net",
+    notificationSubscribeTo: "spam@mikelcalvo.net",
+    notificationUnsubscribeTo: "spam@mikelcalvo.net",
     //This is optional, if not set customer company data will be used:
     companyName: "Mikel Calvo SL", //required
     companyCountry: "Spain", //required
@@ -216,7 +234,9 @@ lists.create(listInfo)
 How to copy a list:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 lists.copy("LIST-UNIQUE-ID")
     .then(function(result) {
@@ -230,7 +250,9 @@ lists.copy("LIST-UNIQUE-ID")
 How to remove a list:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 lists.delete("LIST-UNIQUE-ID")
     .then(function(result) {
@@ -244,7 +266,9 @@ lists.delete("LIST-UNIQUE-ID")
 How to update a list:
 
 ```
-const lists = new mailWizz.Lists(config);
+import { Lists } from "mailwizz";
+
+const lists = new Lists(config);
 
 var newInfo = { //Replace the values with your updated list info
     name: "Main List", //Required
