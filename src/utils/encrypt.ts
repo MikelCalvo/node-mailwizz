@@ -1,7 +1,7 @@
 /**
  * Encrypt
  */
-import {createHmac} from "crypto";
+import { createHmac } from "crypto";
 
 export function hmac_sha(key: string, content: string): string {
 	return createHmac("sha1", key).update(content).digest("hex");

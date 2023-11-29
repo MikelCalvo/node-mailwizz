@@ -3,12 +3,7 @@
 	"version": "2.0.0-beta1",
 	"description": "MailWizz implementation",
 	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
-	"keywords": [
-		"mailwizz-api",
-		"mailwizz",
-		"mailwizz-node",
-		"mailwizz-nodejs"
-	],
+	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
 	"license": "ISC",
 	"readmeFilename": "README.md",
 	"homepage": "https://github.com/mikelcalvo/node-mailwizz#readme",
@@ -17,12 +12,10 @@
 	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"format": "prettier --write \"**/*.js\"",
+		"format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.json\"",
 		"build": "tsc"
 	},
 	"repository": {

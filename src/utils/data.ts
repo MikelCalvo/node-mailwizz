@@ -3,6 +3,6 @@ enum METHOD {
 	POST = "POST",
 	PUT = "PUT",
 	DELETE = "DELETE"
-};
+}
 
 export default METHOD;

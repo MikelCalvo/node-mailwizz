@@ -11,17 +11,17 @@
  * @param {string} send_at - Send at
  * @param {string} body - Body
  * @param {string} plain_text - Plain text
- * 
+ *
  */
 
 export default interface EmailData {
-    to_name: string;
-    to_email: string;
-    from_name: string;
-    reply_to_email: string;
-    reply_to_name: string;
-    subject: string;
-    send_at: string;
-    body?: string;
-    plain_text?: string;
+	to_name: string;
+	to_email: string;
+	from_name: string;
+	reply_to_email: string;
+	reply_to_name: string;
+	subject: string;
+	send_at: string;
+	body?: string;
+	plain_text?: string;
 }

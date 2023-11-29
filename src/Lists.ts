@@ -1,5 +1,5 @@
 import ListInfo from "./types/ListInfo";
-import Request from"./Request";
+import Request from "./Request";
 
 const path: string = "/lists";
 
