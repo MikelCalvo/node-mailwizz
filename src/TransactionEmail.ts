@@ -3,7 +3,7 @@ import EmailData from "./types/EmailData";
 import Request from "./Request";
 import { base64Encode } from "./utils/encrypt";
 
-const path: string = "/TransactionEmail";
+const path: string = "/transactional-emails";
 
 class TransactionEmail extends Request {
 	constructor(config: Config) {
