@@ -1,13 +1,14 @@
-const Request = require("./Request");
+import ListInfo from "./types/ListInfo";
+import Request from"./Request";
 
-const path = "/lists";
+const path: string = "/lists";
 
 class Lists extends Request {
-	constructor(config) {
+	constructor(config: any) {
 		super(config);
 	}
 
-	getLists(page, perPage) {
+	getLists(page: number, perPage: number): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = path;
 		this.data = {
@@ -18,7 +19,7 @@ class Lists extends Request {
 		return this.send();
 	}
 
-	getList(listUid) {
+	getList(listUid: string): Promise<any> {
 		this.method = Request.Type.GET;
 		this.url = `${path}/${listUid}`;
 		this.data = {};
@@ -26,7 +27,7 @@ class Lists extends Request {
 		return this.send();
 	}
 
-	create(info) {
+	create(info: ListInfo): Promise<any> {
 		let postData = {
 			//required
 			general: {
@@ -50,6 +51,16 @@ class Lists extends Request {
 				//where to send the notification
 				subscribe_to: info.notificationSubscribeTo || "",
 				unsubscribe_to: info.notificationUnsubscribeTo || ""
+			},
+			company: {
+				name: info.companyName || null,
+				country: info.companyCountry || null,
+				zone: info.companyZone || null,
+				address_1: info.companyAddress1 || null,
+				address_2: info.companyAddress2 || null,
+				zone_name: info.companyZoneName || null, //when country doesn't have required zone
+				city: info.companyCity || null,
+				zip_code: info.companyZipCode || null
 			}
 		};
 
@@ -93,21 +104,21 @@ class Lists extends Request {
 		return this.send();
 	}
 
-	copy(listUid) {
+	copy(listUid: string): Promise<any> {
 		this.method = Request.Type.POST;
 		this.url = `${path}/${listUid}/copy`;
 
 		return this.send();
 	}
 
-	delete(listUid) {
+	delete(listUid: string): Promise<any> {
 		this.method = Request.Type.DELETE;
 		this.url = `${path}/${listUid}`;
 
 		return this.send();
 	}
 
-	update(listUid, info) {
+	update(listUid: string, info: ListInfo): Promise<any> {
 		let postData = {
 			//required
 			general: {
@@ -131,6 +142,16 @@ class Lists extends Request {
 				//where to send the notification
 				subscribe_to: info.notificationSubscribeTo || "",
 				unsubscribe_to: info.notificationUnsubscribeTo || ""
+			},
+			company: {
+				name: info.companyName || null,
+				country: info.companyCountry || null,
+				zone: info.companyZone || null,
+				address_1: info.companyAddress1 || null,
+				address_2: info.companyAddress2 || null,
+				zone_name: info.companyZoneName || null, //when country doesn't have required zone
+				city: info.companyCity || null,
+				zip_code: info.companyZipCode || null
 			}
 		};
 
@@ -175,4 +196,4 @@ class Lists extends Request {
 	}
 }
 
-module.exports = Lists;
+export default Lists;

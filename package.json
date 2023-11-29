@@ -1,29 +1,43 @@
 {
 	"name": "node-mailwizz",
-	"version": "1.1.9",
+	"version": "2.0.0",
 	"description": "MailWizz implementation",
 	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
-	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
+	"keywords": [
+		"mailwizz-api",
+		"mailwizz",
+		"mailwizz-node",
+		"mailwizz-nodejs"
+	],
 	"license": "ISC",
 	"readmeFilename": "README.md",
 	"homepage": "https://github.com/mikelcalvo/node-mailwizz#readme",
 	"bugs": {
 		"url": "https://github.com/mikelcalvo/node-mailwizz/issues"
 	},
-	"main": "index.js",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"format": "prettier --write \"**/*.js\""
+		"format": "prettier --write \"**/*.js\"",
+		"build": "tsc"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/mikelcalvo/node-mailwizz.git"
 	},
 	"dependencies": {
-		"axios": "1.5.1",
-		"qs": "6.11.2"
+		"axios": "1.6.2",
+		"qs": "6.11.2",
+		"querystring": "0.2.1"
 	},
 	"devDependencies": {
-		"prettier": "^3.0.0"
+		"@types/express": "4.17.19",
+		"@types/node": "20.8.5",
+		"prettier": "3.1.0",
+		"typescript": "^5.2.2"
 	}
 }
