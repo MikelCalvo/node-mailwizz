@@ -306,5 +306,38 @@ lists.update("LIST-UNIQUE-ID", newInfo)
     });
 ```
 
+Countries API:
+How to get the list of countries:
+
+```
+import { Countries } from "mailwizz";
+
+const countriesClass = new Countries(mailingConfig);
+
+countriesClass.getAll()
+    .then(function(countries) {
+        //TODO: Handle the response
+    })
+    .catch(function(err) {
+        //handle error here
+    });
+```
+
+How to get the zones of a country:
+
+```
+import { Countries } from "mailwizz";
+
+const countriesClass = new Countries(mailingConfig);
+
+countriesClass.getAllZones()
+    .then(function(zones) {
+        //TODO: Handle the response
+    })
+    .catch(function(err) {
+        //handle error here
+    });
+```
+
 [npm-url]: https://npmjs.org/package/node-mailwizz
 [npm-version-image]: http://img.shields.io/npm/v/node-mailwizz.svg?style=flat
