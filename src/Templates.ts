@@ -3,7 +3,7 @@ import Request from "./Request";
 
 const path: string = "/templates";
 
-class Template extends Request {
+class Templates extends Request {
 	constructor(config: Config) {
 		super(config);
 	}
@@ -28,4 +28,4 @@ class Template extends Request {
 	}
 }
 
-export default Template;
+export default Templates;
