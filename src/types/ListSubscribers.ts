@@ -51,6 +51,7 @@ export interface GetSubscribersResponse {
  * @property {string} source - Subscriber Source
  * @property {string} ip_address - Subscriber IP Address
  * @property {string} date_added - Subscriber Date Added
+ * @property {string} [key: string] - Any other custom property
  * @memberof  ListSubscribers
  * @see https://api-docs.mailwizz.com/#get-all-subscribers
  */
@@ -63,6 +64,7 @@ export interface GetSubscribersResponseRecord {
 	source: string;
 	ip_address: string;
 	date_added: string;
+	[key: string]: any;
 }
 
 /**
@@ -180,7 +182,7 @@ export interface CreateSubscriberParams {
  * @see https://api-docs.mailwizz.com/#create-a-subscriber
  */
 export interface CreateSubscriberParamsData {
-	email: string;
+	EMAIL: string;
 	[key: string]: any;
 }
 

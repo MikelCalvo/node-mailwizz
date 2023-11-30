@@ -103,7 +103,7 @@ class ListSubscribers extends Request {
 	 * @param {CreateSubscriberParams} params - Params of the request
 	 * @param {string} params.listUid - List UID
 	 * @param {CreateSubscriberParamsData} params.data - User Data
-	 * @param {string} params.data.email - Subscriber Email
+	 * @param {string} params.data.EMAIL - Subscriber Email
 	 * @param {any} params.data[key] - Subscriber Custom Field
 	 * @returns {Promise<CreateSubscriberResponse>} - Promise of the response
 	 * @memberof ListSubscribers

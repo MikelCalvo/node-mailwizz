@@ -13,7 +13,7 @@ With top-notch support, extensive documentation, and a developer-friendly enviro
 A huge shoutout to the brilliant minds behind the evolution of this library:
 
 - **[ntlzz93](https://github.com/ntlzz93)**: For crafting the original library that started it all.
-- **[chgonzalez9](https://github.com/chgonzalez9)**: For the sleek migration to TypeScript, enhancing the developer experience.
+- **[chgonzalez9](https://github.com/chgonzalez9)**: For helping with the migration to TypeScript, enhancing the developer experience.
 - **[kodjunkie](https://github.com/kodjunkie)**: For contributing the unsubscribe method, a crucial feature for email marketing.
 
 Your contributions have been instrumental in shaping `node-mailwizz` into the tool it is today!
@@ -36,6 +36,12 @@ npm install node-mailwizz --save
 
 - [Acknowledgments](#acknowledgments)
 - [Installation](#installation)
+- [Config Object](#config-object)
+- [Campaigns API](#campaigns-api)
+  - [Create a Campaign](#create-a-campaign)
+- [Templates API](#templates-api)
+  - [Get all Templates](#get-all-templates)
+  - [Get a Specific Template](#get-a-specific-template)
 - [Subscriber API](#subscriber-api)
   - [Create a Subscriber](#create-a-subscriber)
   - [Update a Subscriber](#update-a-subscriber)
@@ -57,6 +63,144 @@ npm install node-mailwizz --save
 
 ---
 
+## Config Object
+
+<details>
+<summary>Click to expand</summary>
+
+The config object is required to initialize the API classes. It contains the following properties:
+
+```javascript
+const config = {
+	publicKey: "yourPublicKey",
+	secret: "yourSecretKey",
+	baseUrl: "yourMailwizzApiUrl"
+};
+```
+
+</details>
+
+## Campaigns API
+
+<details>
+<summary>Click to expand</summary>
+
+### Create a Campaign
+
+```javascript
+import { Campaigns, CreateCampaignType } from "node-mailwizz";
+
+const campaigns = new Campaigns(config);
+
+campaigns
+	.create({
+		name: "Campaign Name",
+		type: CreateCampaignType.REGULAR,
+		fromName: "Mikel Calvo",
+		fromEmail: "spam@mikelcalvo.net",
+		subject: "Hi!",
+		replyTo: "spam@mikecalvo.net",
+		sendAt: "2021-01-01 00:00:00",
+		listId: "YOUR-LIST-ID",
+		segmentId: "YOUR-SEGMENT-ID",
+		urlTracking: "yes",
+		templateId: "YOUR-TEMPLATE-ID"
+	})
+	.then(result => console.log("Campaign created:", result))
+	.catch(err => console.error("Error:", err));
+```
+
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+CreateCampaignResponse {
+	status: string;
+	campaign_uid: string;
+}
+```
+
+</details>
+</details>
+
+## Templates API
+
+<details>
+<summary>Click to expand</summary>
+
+### Get all Templates
+
+```javascript
+import { Templates } from "node-mailwizz";
+
+const templates = new Templates(config);
+
+templates
+	.getAll({
+		page: 1,
+		per_page: 10
+	})
+	.then(result => console.log("Templates:", result))
+	.catch(err => console.error("Error:", err));
+```
+
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetAllTemplatesResponse {
+	status: string;
+	data: {
+		records: GetAllTemplatesResponseRecord[];
+	};
+}
+
+GetAllTemplatesResponseRecord {
+	template_uid: string;
+	name: string;
+	screenshot: string;
+}
+
+```
+
+</details>
+
+### Get a Specific Template
+
+```javascript
+import { Templates } from "node-mailwizz";
+
+const templates = new Templates(config);
+
+templates
+	.getTemplate({
+		templateID: "YOUR-TEMPLATE-ID"
+	})
+	.then(result => console.log("Template details:", result))
+	.catch(err => console.error("Error:", err));
+```
+
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetTemplateResponse {
+	status: string;
+	data: {
+		record: GetTemplateResponseRecord;
+	};
+}
+
+GetTemplateResponseRecord {
+    template_uid: string;
+    name: string;
+    screenshot: string;
+}
+```
+
+</details>
+</details>
+
 ## Subscriber API
 
 <details>
@@ -67,15 +211,63 @@ npm install node-mailwizz --save
 ```javascript
 import { ListSubscribers } from "node-mailwizz";
 
-const config = {
-	publicKey: "yourPublicKey",
-	secret: "yourSecretKey",
-	baseUrl: "yourMailwizzApiUrl"
-};
-
 const subscribers = new ListSubscribers(config);
 
-let userInfo = {
+let userInfo: CreateSubscriberParamsData = {
+	//Replace the values with your user info
+	email: "spam@mikelcalvo.net",
+	FNAME: "Mikel",
+	LNAME: "Calvo",
+	CUSTOM: "yourCustomField"
+};
+
+subscribers
+	.create({
+        listUid: "YOUR-LIST-ID",
+        data: userInfo,
+    })
+	.then(result => console.log("Subscriber created:", result))
+	.catch(err => console.error("Error:", err));
+```
+
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+CreateSubscriberResponse {
+	status: string;
+	data: CreateSubscriberResponseData;
+}
+
+CreateSubscriberResponseData {
+	record: CreateSubscriberResponseRecord;
+}
+
+CreateSubscriberResponseRecord {
+	subscriber_uid: string;
+	email: string;
+	ip_address: string;
+	source: string;
+	date_added: CreateSubscriberResponseRecordDateAdded;
+}
+
+CreateSubscriberResponseRecordDateAdded {
+	expression: string;
+	params: any;
+}
+```
+
+</details>
+
+### Update a Subscriber
+
+```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
+// Similar to creating a subscriber, but with updated info
+
+let updatedUserInfo: UpdateSubscriberParamsData = {
 	//Replace the values with your user info
 	EMAIL: "spam@mikelcalvo.net",
 	FNAME: "Mikel",
@@ -84,67 +276,220 @@ let userInfo = {
 };
 
 subscribers
-	.create("YOUR-LIST-ID", userInfo)
-	.then(result => console.log("Subscriber created:", result))
-	.catch(err => console.error("Error:", err));
-```
-
-### Update a Subscriber
-
-```javascript
-// Similar to creating a subscriber, but with updated info
-subscribers
-	.update("YOUR-LIST-ID", "SUBSCRIBER-ID", updatedUserInfo)
+	.update({
+        listUid: "YOUR-LIST-ID",
+        subscriberUid: "SUBSCRIBER-ID",
+        data: updatedUserInfo,
+    })
 	.then(result => console.log("Subscriber updated:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+UpdateSubscriberResponse {
+	status: string;
+	data: UpdateSubscriberResponseData;
+}
+
+UpdateSubscriberResponseData {
+    record: UpdateSubscriberResponseRecord;
+}
+
+UpdateSubscriberResponseRecord {
+    subscriber_uid: string;
+    email: string;
+    ip_address: string;
+    source: string;
+    date_added: UpdateSubscriberResponseRecordDateAdded;
+}
+
+UpdateSubscriberResponseRecordDateAdded {
+    expression: string;
+    params: any;
+}
+```
+
+</details>
+
 ### Delete a Subscriber
 
 ```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
+
 subscribers
-	.delete("YOUR-LIST-ID", "SUBSCRIBER-ID")
+	.delete({
+		listUid: "YOUR-LIST-ID",
+		subscriberUid: "SUBSCRIBER-ID"
+	})
 	.then(result => console.log("Subscriber deleted:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+DeleteSubscriberResponse {
+	status: string;
+}
+```
+
+</details>
+
 ### Unsubscribe a Subscriber
 
 ```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
+
 subscribers
-	.unsubscribe("YOUR-LIST-ID", "SUBSCRIBER-ID")
+	.unsubscribe({
+		listUid: "YOUR-LIST-ID",
+		subscriberUid: "SUBSCRIBER-ID"
+	})
 	.then(result => console.log("Subscriber unsubscribed:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+UnsubscribeSubscriberResponse {
+    status: string;
+}
+```
+
+</details>
+
 ### Retrieve Subscribers
 
 ```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
 // Get a paginated list of subscribers
 subscribers
-	.getSubscribers("YOUR-LIST-ID", pageNumber, itemsPerPage)
+	.getSubscribers({
+		listUid: "YOUR-LIST-ID",
+		page: 1,
+		per_page: 10
+	})
 	.then(result => console.log("Subscribers:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetSubscribersResponse {
+	status: string;
+	data: {
+		count: string;
+		total_pages: number;
+		current_page: number;
+		next_page: number;
+		prev_page: number;
+		records: GetSubscribersResponseRecord[];
+	};
+}
+
+GetSubscribersResponseRecord {
+	subscriber_uid: string;
+	EMAIL: string;
+	FNAME: string;
+	LNAME: string;
+	status: string;
+	source: string;
+	ip_address: string;
+	date_added: string;
+    [key: string]: any;
+}
+
+```
+
+</details>
+
 ### Fetch a Subscriber by ID
 
 ```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
+
 subscribers
-	.getSubscriber("YOUR-LIST-ID", "SUBSCRIBER-ID")
+	.getSubscriber({
+		listUid: "YOUR-LIST-ID",
+		subscriberUid: "SUBSCRIBER-ID"
+	})
 	.then(result => console.log("Subscriber details:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetSubscriberResponse {
+	status: string;
+	data: GetSubscriberResponseData;
+}
+
+GetSubscriberResponseData {
+	subscriber_uid: string;
+	EMAIL: string;
+	FNAME: string;
+	LNAME: string;
+	status: string;
+	source: string;
+	ip_address: string;
+	date_added: string;
+	[key: string]: any;
+}
+```
+
+</details>
+
 ### Find a Subscriber by Email
 
 ```javascript
+import { ListSubscribers } from "node-mailwizz";
+
+const subscribers = new ListSubscribers(config);
+
 subscribers
-	.emailSearch("YOUR-LIST-ID", "subscriber@example.com")
+	.emailSearch({
+		listUid: "YOUR-LIST-ID",
+		email: "spam@mikelcalvo.net"
+	})
 	.then(result => console.log("Subscriber found:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+EmailSearchResponse {
+	status: string;
+	data: EmailSearchResponseData;
+}
+
+EmailSearchResponseData {
+	subscriber_uid: string;
+	status: string;
+	date_added: string;
+}
+```
+
+</details>
 </details>
 
 ## List API
@@ -161,85 +506,300 @@ const lists = new Lists(config);
 
 // Retrieve your lists with pagination
 lists
-	.getLists(pageNumber, itemsPerPage)
+	.getLists({
+		page: 1,
+		per_page: 10
+	})
 	.then(result => console.log("Lists:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetAllListsResponse {
+	status: string;
+	data: {
+		count: string;
+		total_pages: number;
+		current_page: number;
+		next_page: number;
+		prev_page: number;
+		records: GetAllListsResponseRecord[];
+	};
+}
+
+GetAllListsResponseRecord {
+	general: GetAllListsResponseRecordGeneral;
+	defaults: GetAllListsResponseRecordDefaults;
+	notifications: GetAllListsResponseRecordNotifications;
+	company: GetAllListsResponseRecordCompany;
+}
+
+GetAllListsResponseRecordGeneral {
+	list_uid: string;
+	name: string;
+	display_name: string;
+	description: string;
+}
+
+GetAllListsResponseRecordDefaults {
+	from_name: string;
+	reply_to: string;
+	subject: string;
+}
+
+GetAllListsResponseRecordNotifications {
+	subscribe: string;
+	unsubscribe: string;
+	subscribe_to: string;
+	unsubscribe_to: string;
+}
+
+GetAllListsResponseRecordCompany {
+	name: string;
+	address_1: string;
+	address_2: string;
+	zone_name: string;
+	city: string;
+	zip_code: string;
+	phone: string;
+	address_format: string;
+	country: GetAllListsResponseRecordCompanyCountry;
+}
+
+GetAllListsResponseRecordCompanyCountry {
+	country_id: string;
+	name: string;
+	code: string;
+}
+```
+
+</details>
+
 ### Get a Specific List
 
 ```javascript
+import { Lists } from "node-mailwizz";
+
+const lists = new Lists(config);
+
 lists
-	.getList("YOUR-LIST-ID")
+	.getList({
+		listID: "YOUR-LIST-ID"
+	})
 	.then(result => console.log("List details:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetListResponse {
+	status: string;
+	data: {
+		record: GetListResponseRecord;
+	};
+}
+
+GetListResponseRecord {
+	general: GetListResponseRecordGeneral;
+	defaults: GetListResponseRecordDefaults;
+	notifications: GetListResponseRecordNotifications;
+	company: GetListResponseRecordCompany;
+}
+
+GetListResponseRecordGeneral {
+	list_uid: string;
+	name: string;
+	display_name: string;
+	description: string;
+}
+
+GetListResponseRecordDefaults {
+	from_name: string;
+	reply_to: string;
+	subject: string;
+}
+
+GetListResponseRecordNotifications {
+	subscribe: string;
+	unsubscribe: string;
+	subscribe_to: string;
+	unsubscribe_to: string;
+}
+
+GetListResponseRecordCompany {
+	name: string;
+	address_1: string;
+	address_2: string;
+	zone_name: string;
+	city: string;
+	zip_code: string;
+	phone: string;
+	address_format: string;
+	country: GetListResponseRecordCompanyCountry;
+}
+
+GetListResponseRecordCompanyCountry {
+	country_id: string;
+	name: string;
+	code: string;
+}
+```
+
+</details>
+
 ### Create a New List
 
 ```javascript
-// Define your list details
-let listInfo = {
-	//Replace the values with your list info
-	name: "Main List", //Required
-	description: "This is a test list", //Required
-	optIn: "single", //single or double
-	optOut: "single", //single or double
-	fromName: "Mikel Calvo", //Required
-	fromEmail: "spam@mikelcalvo.net", //Required
-	replyTo: "spam@mikelcalvo.net", //Required
-	subject: "Hi!",
-	//notification when new subscriber added
-	notificationSubscribe: "yes", //yes or no
-	notificationUnsubscribe: "yes", //yes or no
-	//where to send the notification
-	notificationSubscribeTo: "spam@mikelcalvo.net",
-	notificationUnsubscribeTo: "spam@mikelcalvo.net",
-	//This is optional, if not set customer company data will be used:
-	companyName: "Mikel Calvo SL", //required
-	companyCountry: "Spain", //required
-	companyZone: "Basque Country", //required
-	companyAddress1: "Some street address", //required
-	companyAddress2: "",
-	companyZoneName: "", //when country doesn't have required zone
-	companyCity: "",
-	companyZipCode: ""
-};
+import { Lists } from "node-mailwizz";
+
+const lists = new Lists(config);
 
 lists
-	.create(listInfo)
+	.create({
+		//Replace the values with your list info
+		name: "Main List", //Required
+		description: "This is a test list", //Required
+		fromName: "Mikel Calvo", //Required
+		fromEmail: "spam@mikelcalvo.net", //Required
+		replyTo: "spam@mikelcalvo.net", //Required
+		subject: "Hi!",
+		//notification when new subscriber added
+		notificationSubscribe: "yes", //yes or no
+		notificationUnsubscribe: "yes", //yes or no
+		//where to send the notification
+		notificationSubscribeTo: "spam@mikelcalvo.net",
+		notificationUnsubscribeTo: "spam@mikelcalvo.net",
+		//This is optional, if not set customer company data will be used:
+		companyName: "Mikel Calvo SL", //required
+		companyCountry: "Spain", //required
+		companyZone: "Basque Country", //required
+		companyAddress1: "Some street address", //required
+		companyAddress2: "",
+		companyZoneName: "", //when country doesn't have required zone
+		companyCity: "",
+		companyZipCode: ""
+	})
 	.then(result => console.log("List created:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+CreateListResponse {
+	status: string;
+	list_uid: string;
+}
+```
+
+</details>
+
 ### Copy a List
 
 ```javascript
+import { Lists } from "node-mailwizz";
+
+const lists = new Lists(config);
+
 lists
-	.copy("YOUR-LIST-ID")
+	.copy({
+		listID: "YOUR-LIST-ID"
+	})
 	.then(result => console.log("List copied:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+CopyListResponse {
+    status: string;
+    list_uid: string;
+}
+```
+
+</details>
+
 ### Remove a List
 
 ```javascript
+import { Lists } from "node-mailwizz";
+
+const lists = new Lists(config);
+
 lists
-	.delete("YOUR-LIST-ID")
+	.delete({
+		listID: "YOUR-LIST-ID"
+	})
 	.then(result => console.log("List removed:", result))
 	.catch(err => console.error("Error:", err));
 ```
+
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+DeleteListResponse {
+	status: string;
+}
+```
+
+</details>
 
 ### Update a List
 
 ```javascript
 // Similar to creating a list, but with updated info
+import { Lists } from "node-mailwizz";
+
+const lists = new Lists(config);
+
 lists
-	.update("YOUR-LIST-ID", updatedListInfo)
+	.update({
+        listID: "YOUR-LIST-ID",
+        name: "Main List", //Required
+        description: "This is a test list", //Required
+        fromName: "Mikel Calvo", //Required
+        fromEmail: "spam@mikelcalvo.net", //Required
+        replyTo: "spam@mikelcalvo.net", //Required
+        subject: "Hi!",
+        //notification when new subscriber added
+        notificationSubscribe: "yes", //yes or no
+        notificationUnsubscribe: "yes", //yes or no
+        //where to send the notification
+        notificationSubscribeTo: "
+        notificationUnsubscribeTo: "
+        //This is optional, if not set customer company data will be used:
+        companyName: "Mikel Calvo SL", //required
+        companyCountry: "Spain", //required
+        companyZone: "Basque Country", //required
+        companyAddress1: "Some street address", //required
+        companyAddress2: "",
+        companyZoneName: "", //when country doesn't have required zone
+        companyCity: "",
+        companyZipCode: ""
+    })
 	.then(result => console.log("List updated:", result))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+UpdateListResponse {
+	status: string;
+}
+```
+
+</details>
 </details>
 
 ## Countries API
@@ -255,21 +815,90 @@ import { Countries } from "node-mailwizz";
 const countriesClass = new Countries(config);
 
 countriesClass
-	.getAll()
+	.getAll({
+		page: 1,
+		per_page: 10
+	})
 	.then(countries => console.log("Countries:", countries))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetAllCountriesResponse {
+	status: string;
+	data: {
+		count: string;
+		total_pages: number;
+		current_page: number;
+		next_page: number;
+		prev_page: number;
+		records: GetAllCountriesResponseRecord[];
+	};
+}
+
+GetAllCountriesResponseRecord {
+	country_id: string;
+	name: string;
+	code: string;
+}
+```
+
+</details>
+
 ### Get Zones of a Country
 
 ```javascript
+import { Countries } from "node-mailwizz";
+
+const countriesClass = new Countries(config);
+
 countriesClass
-	.getAllZones("COUNTRY-ID")
+	.getAllZones({
+		countryID: "ES",
+		page: 1,
+		per_page: 10
+	})
 	.then(zones => console.log("Zones:", zones))
 	.catch(err => console.error("Error:", err));
 ```
 
+<details>
+<summary>Response (Click to expand)</summary>
+
+```javascript
+GetAllZonesResponse {
+	status: string;
+	data: {
+		count: string;
+		total_pages: number;
+		current_page: number;
+		next_page: number;
+		prev_page: number;
+		records: GetAllZonesResponseRecord[];
+	};
+}
+
+GetAllZonesResponseRecord {
+    zone_id: string;
+    name: string;
+    code: string;
+}
+```
+
 </details>
+</details>
+
+---
+
+<br>
+<br>
+
+# License
+
+This project is licensed under the ISC License - see the [LICENSE.md](LICENSE.md) file for details
 
 ---
 
