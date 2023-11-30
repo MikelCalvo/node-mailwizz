@@ -1,9 +1,9 @@
-import Config from "./types/Config";
 import METHOD from "./utils/data";
 import { stringify } from "querystring";
 import { ksort, serialize, hmac_sha } from "./utils/encrypt";
 import axios, { AxiosRequestConfig } from "axios";
-let qs = require("qs");
+import qs from "qs";
+import { Config } from "./types/Config";
 
 class Request {
 	private config: Config;
@@ -12,22 +12,20 @@ class Request {
 	data: Record<string, any>;
 	private query: Record<string, any>;
 	private header: Record<string, any>;
+	private axiosInstance: any;
+
 	constructor({ publicKey, secret, baseUrl }: Config) {
-		this.config = {
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		};
+		this.config = { publicKey, secret, baseUrl };
 		this.url = null;
 		this.method = null;
 		this.data = {};
 		this.query = {};
-
 		this.header = {
-			"X-MW-PUBLIC-KEY": this.config.publicKey,
-			"X-MW-TIMESTAMP": Math.floor(new Date().valueOf() / 1000).toString(),
+			"X-MW-PUBLIC-KEY": publicKey,
+			"X-MW-TIMESTAMP": Math.floor(Date.now() / 1000).toString(),
 			"X-MW-REMOTE-ADDR": ""
 		};
+		this.axiosInstance = axios.create({ baseURL: baseUrl });
 	}
 
 	static get Type(): typeof METHOD {
@@ -35,7 +33,7 @@ class Request {
 	}
 
 	async send(): Promise<any> {
-		if (this.data && this.method === METHOD.GET) {
+		if (this.data instanceof Object && this.method === METHOD.GET) {
 			this.query = this.data;
 			this.data = {};
 		}
@@ -43,11 +41,10 @@ class Request {
 		this.__sign();
 		this.__setXHttpMethodOverride();
 
-		let options: AxiosRequestConfig = {
+		const options: AxiosRequestConfig = {
 			method: this.method || "GET",
-			baseURL: this.config.baseUrl,
-			url: this.url || "GET",
-			headers: this.header || {}
+			url: this.url || "",
+			headers: this.header
 		};
 
 		if (this.method === METHOD.GET) {
@@ -61,7 +58,7 @@ class Request {
 		}
 
 		try {
-			const response = await axios(options);
+			const response = await this.axiosInstance(options);
 			return response.data;
 		} catch (err: any) {
 			if (!err.response) throw err;
@@ -75,30 +72,31 @@ class Request {
 	}
 
 	__sign(): void {
-		let specialHeaderParams = this.header;
-		let privateKey = this.config.secret;
-		let method = this.method;
-		let paramPost = this.method === METHOD.GET ? {} : this.data || {};
-		let paramGet =
-			this.method === METHOD.GET ? this.data || {} : this.query || {};
-		let separator;
+		const {
+			header,
+			config: { secret: privateKey },
+			method,
+			data,
+			query
+		} = this;
+		const paramPost = method === METHOD.GET ? {} : data;
+		const paramGet = method === METHOD.GET ? data : query;
 
-		let params = Object.assign({}, specialHeaderParams, paramPost);
+		let params = Object.assign({}, header, paramPost);
 		params = ksort(params);
 
-		var apiUrl = this.config.baseUrl + this.url;
+		let apiUrl = this.config.baseUrl + this.url;
+		let separator = "?";
 
-		if (this.method === METHOD.GET && Object.keys(paramGet).length > 0) {
+		if (method === METHOD.GET && Object.keys(paramGet).length > 0) {
 			apiUrl += "?" + stringify(paramGet);
 			separator = "&";
-		} else {
-			separator = "?";
 		}
 
-		let signatureString = `${method} ${apiUrl}${separator}${serialize(params)}`;
-		console.log(apiUrl);
-		console.log(signatureString);
-		let hash = hmac_sha(privateKey, signatureString);
+		const signatureString = `${method} ${apiUrl}${separator}${serialize(
+			params
+		)}`;
+		const hash = hmac_sha(privateKey, signatureString);
 
 		this.header["X-MW-SIGNATURE"] = hash;
 	}

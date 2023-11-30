@@ -1,66 +1,151 @@
-import ListInfo from "./types/ListInfo";
+import {
+	CopyListParams,
+	CopyListResponse,
+	CreateListParams,
+	CreateListResponse,
+	DeleteListParams,
+	DeleteListResponse,
+	GetAllListsParams,
+	GetAllListsResponse,
+	GetListParams,
+	GetListResponse,
+	UpdateListParams,
+	UpdateListResponse
+} from "./types/Lists";
 import Request from "./Request";
+import { Config } from "./types/Config";
 
 const path: string = "/lists";
 
 class Lists extends Request {
-	constructor(config: any) {
-		super(config);
+	/**
+	 * @description Creates an instance of Lists.
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#lists
+	 */
+	constructor({ publicKey, secret, baseUrl }: Config) {
+		super({
+			publicKey: publicKey,
+			secret: secret,
+			baseUrl: baseUrl
+		});
 	}
 
-	getLists(page: number, perPage: number): Promise<any> {
+	/**
+	 * @description Get all lists
+	 * @param {GetAllListsParams} params - Params of the request
+	 * @param {number} params.page - Page of the response
+	 * @param {number} params.per_page - Items per page of the response
+	 * @returns {Promise<GetAllListsResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#get-all-lists
+	 */
+	getLists({
+		page,
+		per_page
+	}: GetAllListsParams): Promise<GetAllListsResponse> {
 		this.method = Request.Type.GET;
 		this.url = path;
 		this.data = {
 			page: page,
-			per_page: perPage
+			per_page: per_page
 		};
 
 		return this.send();
 	}
 
-	getList(listUid: string): Promise<any> {
+	/**
+	 * @description Get a list
+	 * @param {GetListParams} params - Params of the request
+	 * @param {string} params.listID - List ID
+	 * @returns {Promise<GetListResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#get-a-list
+	 */
+	getList({ listID }: GetListParams): Promise<GetListResponse> {
 		this.method = Request.Type.GET;
-		this.url = `${path}/${listUid}`;
+		this.url = `${path}/${listID}`;
 		this.data = {};
 
 		return this.send();
 	}
 
-	create(info: ListInfo): Promise<any> {
+	/**
+	 * @description Create a list
+	 * @param {CreateListParams} info - Info of the list
+	 * @param {string} info.name - Name of the list
+	 * @param {string} info.description - Description of the list
+	 * @param {string} info.fromName - From name of the list
+	 * @param {string} info.fromEmail - From email of the list
+	 * @param {string} info.replyTo - Reply to of the list
+	 * @param {string} info.subject - Subject of the list
+	 * @param {string} info.notificationSubscribe - Notification subscribe of the list
+	 * @param {string} info.notificationUnsubscribe - Notification unsubscribe of the list
+	 * @param {string} info.notificationSubscribeTo - Notification subscribe to of the list
+	 * @param {string} info.notificationUnsubscribeTo - Notification unsubscribe to of the list
+	 * @param {string} info.companyName - Company name of the list
+	 * @param {string} info.companyCountry - Company country of the list
+	 * @param {string} info.companyZone - Company zone of the list
+	 * @param {string} info.companyAddress1 - Company address 1 of the list
+	 * @param {string} info.companyAddress2 - Company address 2 of the list
+	 * @param {string} info.companyZoneName - Company zone name of the list
+	 * @param {string} info.companyCity - Company city of the list
+	 * @param {string} info.companyZipCode - Company zip code of the list
+	 * @returns {Promise<CreateListResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#create-a-list
+	 */
+	create({
+		name,
+		description,
+		fromName,
+		fromEmail,
+		replyTo,
+		subject,
+		notificationSubscribe,
+		notificationUnsubscribe,
+		notificationSubscribeTo,
+		notificationUnsubscribeTo,
+		companyName,
+		companyCountry,
+		companyZone,
+		companyAddress1,
+		companyAddress2,
+		companyZoneName,
+		companyCity,
+		companyZipCode
+	}: CreateListParams): Promise<CreateListResponse> {
 		let postData = {
 			//required
 			general: {
-				name: info.name, //required
-				description: info.description, //required
-				opt_in: info.optIn || "single",
-				opt_out: info.optOut || "single"
+				name: name, //required
+				description: description //required
 			},
 			//required
 			defaults: {
-				from_name: info.fromName, //required
-				from_email: info.fromEmail, //required
-				reply_to: info.replyTo, //required
-				subject: info.subject || ""
+				from_name: fromName, //required
+				from_email: fromEmail, //required
+				reply_to: replyTo, //required
+				subject: subject || ""
 			},
 
 			notifications: {
 				//notification when new subscriber added
-				subscribe: info.notificationSubscribe || "no", //'yes'|'no'
-				unsubscribe: info.notificationUnsubscribe || "no", //'yes'|'no'
+				subscribe: notificationSubscribe || "no", //'yes'|'no'
+				unsubscribe: notificationUnsubscribe || "no", //'yes'|'no'
 				//where to send the notification
-				subscribe_to: info.notificationSubscribeTo || "",
-				unsubscribe_to: info.notificationUnsubscribeTo || ""
+				subscribe_to: notificationSubscribeTo || "",
+				unsubscribe_to: notificationUnsubscribeTo || ""
 			},
 			company: {
-				name: info.companyName || null,
-				country: info.companyCountry || null,
-				zone: info.companyZone || null,
-				address_1: info.companyAddress1 || null,
-				address_2: info.companyAddress2 || null,
-				zone_name: info.companyZoneName || null, //when country doesn't have required zone
-				city: info.companyCity || null,
-				zip_code: info.companyZipCode || null
+				name: companyName || null,
+				country: companyCountry || null,
+				zone: companyZone || null,
+				address_1: companyAddress1 || null,
+				address_2: companyAddress2 || null,
+				zone_name: companyZoneName || null, //when country doesn't have required zone
+				city: companyCity || null,
+				zip_code: companyZipCode || null
 			}
 		};
 
@@ -79,21 +164,16 @@ class Lists extends Request {
 		//     };
 		// }
 
-		if (
-			info.companyName &&
-			info.companyCountry &&
-			info.companyZone &&
-			info.companyAddress1
-		) {
+		if (companyName && companyCountry && companyZone && companyAddress1) {
 			postData.company = {
-				name: info.companyName, //required
-				country: info.companyCountry, //required
-				zone: info.companyZone, //required
-				address_1: info.companyAddress1, //required
-				address_2: info.companyAddress2 || null,
-				zone_name: info.companyZoneName || null, //when country doesn't have required zone
-				city: info.companyCity || null,
-				zip_code: info.companyZipCode || null
+				name: companyName, //required
+				country: companyCountry, //required
+				zone: companyZone, //required
+				address_1: companyAddress1, //required
+				address_2: companyAddress2 || null,
+				zone_name: companyZoneName || null, //when country doesn't have required zone
+				city: companyCity || null,
+				zip_code: companyZipCode || null
 			};
 		}
 
@@ -104,54 +184,114 @@ class Lists extends Request {
 		return this.send();
 	}
 
-	copy(listUid: string): Promise<any> {
+	/**
+	 * @description Copy a list
+	 * @param {CopyListParams} params - Params of the request
+	 * @param {string} params.listID - List ID
+	 * @returns {Promise<CopyListResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#copy-a-list
+	 */
+	copy({ listID }: CopyListParams): Promise<CopyListResponse> {
 		this.method = Request.Type.POST;
-		this.url = `${path}/${listUid}/copy`;
+		this.url = `${path}/${listID}/copy`;
 
 		return this.send();
 	}
 
-	delete(listUid: string): Promise<any> {
+	/**
+	 * @description Delete a list
+	 * @param {DeleteListParams} params - Params of the request
+	 * @param {string} params.listID - List ID
+	 * @returns {Promise<DeleteListResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#delete-a-list
+	 */
+	delete({ listID }: DeleteListParams): Promise<DeleteListResponse> {
 		this.method = Request.Type.DELETE;
-		this.url = `${path}/${listUid}`;
+		this.url = `${path}/${listID}`;
 
 		return this.send();
 	}
 
-	update(listUid: string, info: ListInfo): Promise<any> {
+	/**
+	 * @description Update a list
+	 * @param {UpdateListParams} info - Info of the list
+	 * @param {string} info.listID - List ID
+	 * @param {string} info.name - Name of the list
+	 * @param {string} info.description - Description of the list
+	 * @param {string} info.fromName - From name of the list
+	 * @param {string} info.fromEmail - From email of the list
+	 * @param {string} info.replyTo - Reply to of the list
+	 * @param {string} info.subject - Subject of the list
+	 * @param {string} info.notificationSubscribe - Notification subscribe of the list
+	 * @param {string} info.notificationUnsubscribe - Notification unsubscribe of the list
+	 * @param {string} info.notificationSubscribeTo - Notification subscribe to of the list
+	 * @param {string} info.notificationUnsubscribeTo - Notification unsubscribe to of the list
+	 * @param {string} info.companyName - Company name of the list
+	 * @param {string} info.companyCountry - Company country of the list
+	 * @param {string} info.companyZone - Company zone of the list
+	 * @param {string} info.companyAddress1 - Company address 1 of the list
+	 * @param {string} info.companyAddress2 - Company address 2 of the list
+	 * @param {string} info.companyZoneName - Company zone name of the list
+	 * @param {string} info.companyCity - Company city of the list
+	 * @param {string} info.companyZipCode - Company zip code of the list
+	 * @returns {Promise<UpdateListResponse>} - Promise of the response
+	 * @memberof Lists
+	 * @see https://api-docs.mailwizz.com/#update-a-list
+	 */
+	update({
+		listID,
+		name,
+		description,
+		fromName,
+		fromEmail,
+		replyTo,
+		subject,
+		notificationSubscribe,
+		notificationUnsubscribe,
+		notificationSubscribeTo,
+		notificationUnsubscribeTo,
+		companyName,
+		companyCountry,
+		companyZone,
+		companyAddress1,
+		companyAddress2,
+		companyZoneName,
+		companyCity,
+		companyZipCode
+	}: UpdateListParams): Promise<UpdateListResponse> {
 		let postData = {
 			//required
 			general: {
-				name: info.name, //required
-				description: info.description, //required
-				opt_in: info.optIn || "single",
-				opt_out: info.optOut || "single"
+				name: name, //required
+				description: description //required
 			},
 			//required
 			defaults: {
-				from_name: info.fromName, //required
-				from_email: info.fromEmail, //required
-				reply_to: info.replyTo, //required
-				subject: info.subject || ""
+				from_name: fromName, //required
+				from_email: fromEmail, //required
+				reply_to: replyTo, //required
+				subject: subject || ""
 			},
 
 			notifications: {
 				//notification when new subscriber added
-				subscribe: info.notificationSubscribe || "no", //'yes'|'no'
-				unsubscribe: info.notificationUnsubscribe || "no", //'yes'|'no'
+				subscribe: notificationSubscribe || "no", //'yes'|'no'
+				unsubscribe: notificationUnsubscribe || "no", //'yes'|'no'
 				//where to send the notification
-				subscribe_to: info.notificationSubscribeTo || "",
-				unsubscribe_to: info.notificationUnsubscribeTo || ""
+				subscribe_to: notificationSubscribeTo || "",
+				unsubscribe_to: notificationUnsubscribeTo || ""
 			},
 			company: {
-				name: info.companyName || null,
-				country: info.companyCountry || null,
-				zone: info.companyZone || null,
-				address_1: info.companyAddress1 || null,
-				address_2: info.companyAddress2 || null,
-				zone_name: info.companyZoneName || null, //when country doesn't have required zone
-				city: info.companyCity || null,
-				zip_code: info.companyZipCode || null
+				name: companyName || null,
+				country: companyCountry || null,
+				zone: companyZone || null,
+				address_1: companyAddress1 || null,
+				address_2: companyAddress2 || null,
+				zone_name: companyZoneName || null, //when country doesn't have required zone
+				city: companyCity || null,
+				zip_code: companyZipCode || null
 			}
 		};
 
@@ -170,26 +310,21 @@ class Lists extends Request {
 		//     };
 		// }
 
-		if (
-			info.companyName &&
-			info.companyCountry &&
-			info.companyZone &&
-			info.companyAddress1
-		) {
+		if (companyName && companyCountry && companyZone && companyAddress1) {
 			postData.company = {
-				name: info.companyName, //required
-				country: info.companyCountry, //required
-				zone: info.companyZone, //required
-				address_1: info.companyAddress1, //required
-				address_2: info.companyAddress2 || null,
-				zone_name: info.companyZoneName || null, //when country doesn't have required zone
-				city: info.companyCity || null,
-				zip_code: info.companyZipCode || null
+				name: companyName, //required
+				country: companyCountry, //required
+				zone: companyZone, //required
+				address_1: companyAddress1, //required
+				address_2: companyAddress2 || null,
+				zone_name: companyZoneName || null, //when country doesn't have required zone
+				city: companyCity || null,
+				zip_code: companyZipCode || null
 			};
 		}
 
 		this.method = Request.Type.PUT;
-		this.url = `${path}/${listUid}`;
+		this.url = `${path}/${listID}`;
 		this.data = postData;
 
 		return this.send();

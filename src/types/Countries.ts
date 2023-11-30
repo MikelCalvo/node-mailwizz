@@ -1,4 +1,17 @@
 /**
+ * @description Interface for the parameters of the API call to get all countries
+ * @interface GetAllCountriesParams
+ * @property {number} page - Page of the response
+ * @property {number} per_page - Items per page of the response
+ * @see https://api-docs.mailwizz.com/#get-all-countries
+ * @memberof Countries
+ */
+export interface GetAllCountriesParams {
+	page?: number;
+	per_page?: number;
+}
+
+/**
  * @description Interface for the response of the API call to get all countries
  * @interface GetAllCountriesResponse
  * @property {string} status - Status of the response
@@ -10,6 +23,7 @@
  * @property {number} data.prev_page - Previous Page
  * @property {GetAllCountriesResponseRecord[]} data.records - Records of the response
  * @see https://api-docs.mailwizz.com/#get-all-countries
+ * @memberof Countries
  */
 export interface GetAllCountriesResponse {
 	status: string;
@@ -30,11 +44,26 @@ export interface GetAllCountriesResponse {
  * @property {string} name - Country Name
  * @property {string} code - Country Code
  * @see https://api-docs.mailwizz.com/#get-all-countries
+ * @memberof Countries
  */
 export interface GetAllCountriesResponseRecord {
 	country_id: string;
 	name: string;
 	code: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to get all zones of a country
+ * @interface GetAllZonesParams
+ * @property {string} countryID - Country ID
+ * @property {number} page - Page of the response
+ * @property {number} per_page - Items per page of the response
+ * @see https://api-docs.mailwizz.com/#get-all-zones-of-a-country
+ */
+export interface GetAllZonesParams {
+	countryID: string;
+	page?: number;
+	per_page?: number;
 }
 
 /**
@@ -48,6 +77,7 @@ export interface GetAllCountriesResponseRecord {
  * @property {number} data.next_page - Next Page
  * @property {number} data.prev_page - Previous Page
  * @see https://api-docs.mailwizz.com/#get-all-zones-of-a-country
+ * @memberof Countries
  */
 export interface GetAllZonesResponse {
 	status: string;
@@ -68,6 +98,7 @@ export interface GetAllZonesResponse {
  * @property {string} name - Zone Name
  * @property {string} code - Zone Code
  * @see https://api-docs.mailwizz.com/#get-all-zones-of-a-country
+ * @memberof Countries
  */
 export interface GetAllZonesResponseRecord {
 	zone_id: string;

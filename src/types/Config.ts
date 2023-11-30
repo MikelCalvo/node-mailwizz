@@ -7,7 +7,7 @@
  *
  */
 
-export default interface Config {
+export interface Config {
 	publicKey: string;
 	secret: string;
 	baseUrl: string;

@@ -1,28 +1,72 @@
-import CampaignInfo from "./types/CampaignInfo";
+import {
+	CreateCampaignParams,
+	CreateCampaignResponse,
+	CreateCampaignType
+} from "./types/Campaigns";
 import Request from "./Request";
+import { Config } from "./types/Config";
 
 const path: string = "/campaigns";
 
 class Campaigns extends Request {
-	constructor(config: any) {
-		super(config);
+	/**
+	 * @description Creates an instance of Campaigns.
+	 * @memberof Campaigns
+	 * @see https://api-docs.mailwizz.com/#campaigns
+	 */
+	constructor({ publicKey, secret, baseUrl }: Config) {
+		super({
+			publicKey: publicKey,
+			secret: secret,
+			baseUrl: baseUrl
+		});
 	}
 
-	create(info: CampaignInfo): Promise<any> {
+	/**
+	 * @description Create a campaign
+	 * @param {CreateCampaignParams} params - Info of the campaign
+	 * @param {string} params.name - Name of the campaign
+	 * @param {CreateCampaignType} params.type - Type of the campaign
+	 * @param {string} params.fromName - From name of the campaign
+	 * @param {string} params.fromEmail - From email of the campaign
+	 * @param {string} params.subject - Subject of the campaign
+	 * @param {string} params.replyTo - Reply to of the campaign
+	 * @param {string} params.sendAt - Send at of the campaign (YYYY-MM-DD hh:mm:ss)
+	 * @param {string} params.listId - List ID of the campaign
+	 * @param {string} params.segmentId - Segment ID of the campaign
+	 * @param {string} params.urlTracking - URL tracking of the campaign
+	 * @param {string} params.templateId - Template ID of the campaign
+	 * @returns {Promise<CreateCampaignResponse>} - Promise of the response
+	 * @memberof Campaigns
+	 * @see https://api-docs.mailwizz.com/#create-a-campaign
+	 */
+	create({
+		name,
+		type,
+		fromName,
+		fromEmail,
+		subject,
+		replyTo,
+		sendAt,
+		listId,
+		segmentId,
+		urlTracking,
+		templateId
+	}: CreateCampaignParams): Promise<CreateCampaignResponse> {
 		let postData = {
-			name: info.name, //required
-			type: info.type || "regular", //optional: regular or autoresponder
-			from_name: info.fromName, //required
-			from_email: info.fromEmail, //required
-			subject: info.subject, //required
-			reply_to: info.replyTo, //required
-			send_at: info.sendAt, //required YYYY-MM-DD hh:mm:ss
-			list_uid: info.listId, //required
-			segment_uid: info.segmentId || "", //optional
+			name: name, //required
+			type: type || CreateCampaignType.REGULAR, //optional: regular or autoresponder
+			from_name: fromName, //required
+			from_email: fromEmail, //required
+			subject: subject, //required
+			reply_to: replyTo, //required
+			send_at: sendAt, //required YYYY-MM-DD hh:mm:ss
+			list_uid: listId, //required
+			segment_uid: segmentId || "", //optional
 
 			//optional block, defaults are shown
 			options: {
-				url_tracking: info.urlTracking || "no",
+				url_tracking: urlTracking || "no",
 				json_feed: "no",
 				xml_feed: "no",
 				plain_text_email: "yes",
@@ -31,7 +75,7 @@ class Campaigns extends Request {
 
 			//required block, archive or template_uid or content
 			template: {
-				template_uid: info.templateId, //required
+				template_uid: templateId, //required
 				archive: "",
 				content: "",
 				inline_css: "yes",
