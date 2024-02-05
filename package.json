@@ -30,7 +30,7 @@
 	"devDependencies": {
 		"@types/express": "4.17.21",
 		"@types/node": "20.11.9",
-		"prettier": "3.2.4",
+		"prettier": "3.2.5",
 		"typescript": "^5.3.3"
 	}
 }
