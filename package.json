@@ -6,9 +6,9 @@
 	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
 	"license": "ISC",
 	"readmeFilename": "README.md",
-	"homepage": "https://github.com/mikelcalvo/node-mailwizz#readme",
+	"homepage": "https://github.com/MikelCalvo/node-mailwizz#readme",
 	"bugs": {
-		"url": "https://github.com/mikelcalvo/node-mailwizz/issues"
+		"url": "https://github.com/MikelCalvo/node-mailwizz/issues"
 	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -20,7 +20,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/mikelcalvo/node-mailwizz.git"
+		"url": "git+https://github.com/MikelCalvo/node-mailwizz.git"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
 	},
 	"dependencies": {
 		"axios": "1.13.2",
