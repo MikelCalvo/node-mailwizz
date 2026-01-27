@@ -170,7 +170,9 @@ class Templates extends Request {
 	 * @memberof Templates
 	 * @see https://api-docs.mailwizz.com/#delete-a-template
 	 */
-	delete({ templateUid }: DeleteTemplateParams): Promise<DeleteTemplateResponse> {
+	delete({
+		templateUid
+	}: DeleteTemplateParams): Promise<DeleteTemplateResponse> {
 		this.method = Request.Type.DELETE;
 		this.url = `${path}/${templateUid}`;
 

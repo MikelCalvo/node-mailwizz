@@ -140,7 +140,9 @@ class Campaigns extends Request {
 	 * @memberof Campaigns
 	 * @see https://api-docs.mailwizz.com/#get-one-campaign
 	 */
-	getCampaign({ campaignUid }: GetCampaignParams): Promise<GetCampaignResponse> {
+	getCampaign({
+		campaignUid
+	}: GetCampaignParams): Promise<GetCampaignResponse> {
 		this.method = Request.Type.GET;
 		this.url = `${path}/${campaignUid}`;
 		this.data = {};
@@ -261,7 +263,9 @@ class Campaigns extends Request {
 	 * @memberof Campaigns
 	 * @see https://api-docs.mailwizz.com/#delete-a-campaign
 	 */
-	delete({ campaignUid }: DeleteCampaignParams): Promise<DeleteCampaignResponse> {
+	delete({
+		campaignUid
+	}: DeleteCampaignParams): Promise<DeleteCampaignResponse> {
 		this.method = Request.Type.DELETE;
 		this.url = `${path}/${campaignUid}`;
 

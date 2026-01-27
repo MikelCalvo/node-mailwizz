@@ -56,7 +56,9 @@ class TransactionEmail extends Request {
 		replyToEmail
 	}: CreateTransactionalEmailParams): Promise<CreateTransactionalEmailResponse> {
 		if (!toName || !toEmail || !fromName || !subject || !body || !sendAt) {
-			return Promise.reject(new Error("ParamInvalid: Missing required parameters"));
+			return Promise.reject(
+				new Error("ParamInvalid: Missing required parameters")
+			);
 		}
 
 		let data: any = {
