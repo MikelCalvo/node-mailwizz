@@ -80,7 +80,7 @@ class Request {
 			query
 		} = this;
 		const paramPost = method === METHOD.GET ? {} : data;
-		const paramGet = method === METHOD.GET ? data : query;
+		const paramGet = method === METHOD.GET ? query : {};
 
 		let params = Object.assign({}, header, paramPost);
 		params = ksort(params);
