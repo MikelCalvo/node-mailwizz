@@ -149,21 +149,6 @@ class Lists extends Request {
 			}
 		};
 
-		// if (info.notificationSubscribe
-		//     && info.notificationUnsubscribe
-		//     && ['yes', 'no'].indexOf(info.notificationSubscribe) > -1
-		//     && ['yes', 'no'].indexOf(info.notificationUnsubscribe) > -1 ) {
-		//
-		//     postData.notifications = {
-		//         //notification when new subscriber added
-		//         subscribe: info.notificationSubscribe, //'yes'|'no'
-		//         unsubscribe: info.notificationUnsubscribe, //'yes'|'no'
-		//         //where to send the notification
-		//         subscribe_to: info.notificationSubscribeTo,
-		//         unsubscribe_to: info.notificationUnsubscribeTo
-		//     };
-		// }
-
 		if (companyName && companyCountry && companyZone && companyAddress1) {
 			postData.company = {
 				name: companyName, //required
@@ -294,21 +279,6 @@ class Lists extends Request {
 				zip_code: companyZipCode || null
 			}
 		};
-
-		// if (info.notificationSubscribe
-		//     && info.notificationUnsubscribe
-		//     && ['yes', 'no'].indexOf(info.notificationSubscribe) > -1
-		//     && ['yes', 'no'].indexOf(info.notificationUnsubscribe) > -1 ) {
-		//
-		//     postData.notifications = {
-		//         //notification when new subscriber added
-		//         subscribe: info.notificationSubscribe, //'yes'|'no'
-		//         unsubscribe: info.notificationUnsubscribe, //'yes'|'no'
-		//         //where to send the notification
-		//         subscribe_to: info.notificationSubscribeTo,
-		//         unsubscribe_to: info.notificationUnsubscribeTo
-		//     };
-		// }
 
 		if (companyName && companyCountry && companyZone && companyAddress1) {
 			postData.company = {

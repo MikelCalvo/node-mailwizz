@@ -2,7 +2,13 @@ import Request from "./Request";
 import { base64Encode } from "./utils/encrypt";
 import {
 	CreateTransactionalEmailParams,
-	CreateTransactionalEmailResponse
+	CreateTransactionalEmailResponse,
+	GetAllTransactionalEmailsParams,
+	GetAllTransactionalEmailsResponse,
+	GetTransactionalEmailParams,
+	GetTransactionalEmailResponse,
+	DeleteTransactionalEmailParams,
+	DeleteTransactionalEmailResponse
 } from "./types/TransactionEmail";
 import { Config } from "./types/Config";
 
@@ -50,7 +56,7 @@ class TransactionEmail extends Request {
 		replyToEmail
 	}: CreateTransactionalEmailParams): Promise<CreateTransactionalEmailResponse> {
 		if (!toName || !toEmail || !fromName || !subject || !body || !sendAt) {
-			return Promise.reject("ParamInvalid");
+			return Promise.reject(new Error("ParamInvalid: Missing required parameters"));
 		}
 
 		let data: any = {
@@ -69,6 +75,61 @@ class TransactionEmail extends Request {
 		this.url = path;
 		this.method = Request.Type.POST;
 		this.data = { email: data };
+
+		return this.send();
+	}
+
+	/**
+	 * @description Get all transactional emails
+	 * @param {GetAllTransactionalEmailsParams} params - Params of the request
+	 * @param {number} [params.page] - Page number
+	 * @param {number} [params.per_page] - Items per page
+	 * @returns {Promise<GetAllTransactionalEmailsResponse>} - Promise of the response
+	 * @memberof TransactionEmail
+	 */
+	getAll({
+		page,
+		per_page
+	}: GetAllTransactionalEmailsParams = {}): Promise<GetAllTransactionalEmailsResponse> {
+		this.method = Request.Type.GET;
+		this.url = path;
+		this.data = {
+			page: page,
+			per_page: per_page
+		};
+
+		return this.send();
+	}
+
+	/**
+	 * @description Get a transactional email by UID
+	 * @param {GetTransactionalEmailParams} params - Params of the request
+	 * @param {string} params.emailUid - Email UID
+	 * @returns {Promise<GetTransactionalEmailResponse>} - Promise of the response
+	 * @memberof TransactionEmail
+	 */
+	getOne({
+		emailUid
+	}: GetTransactionalEmailParams): Promise<GetTransactionalEmailResponse> {
+		this.method = Request.Type.GET;
+		this.url = `${path}/${emailUid}`;
+		this.data = {};
+
+		return this.send();
+	}
+
+	/**
+	 * @description Delete a transactional email
+	 * @param {DeleteTransactionalEmailParams} params - Params of the request
+	 * @param {string} params.emailUid - Email UID
+	 * @returns {Promise<DeleteTransactionalEmailResponse>} - Promise of the response
+	 * @memberof TransactionEmail
+	 */
+	delete({
+		emailUid
+	}: DeleteTransactionalEmailParams): Promise<DeleteTransactionalEmailResponse> {
+		this.method = Request.Type.DELETE;
+		this.url = `${path}/${emailUid}`;
 
 		return this.send();
 	}
