@@ -1,0 +1,2036 @@
+openapi: 3.0.3
+info:
+  title: MailWizz API - Node.js SDK
+  description: |
+    Node.js SDK for the MailWizz Email Marketing Application API.
+
+    ## Installation
+    ```bash
+    npm install node-mailwizz
+    ```
+
+    ## Configuration
+    ```javascript
+    const { Lists, Campaigns, ListSubscribers } = require('node-mailwizz');
+
+    const config = {
+      publicKey: 'your-public-key',
+      secret: 'your-secret-key',
+      baseUrl: 'https://your-mailwizz-instance.com/api'
+    };
+    ```
+  version: 2.1.0
+  license:
+    name: ISC
+    url: https://opensource.org/licenses/ISC
+  contact:
+    name: Mikel Calvo
+    url: https://github.com/MikelCalvo/node-mailwizz
+
+servers:
+  - url: https://your-mailwizz-instance.com/api
+    description: Your MailWizz API instance
+
+tags:
+  - name: Lists
+    description: Manage mailing lists
+  - name: List Fields
+    description: Manage custom fields for lists
+  - name: List Segments
+    description: Manage segments within lists
+  - name: List Subscribers
+    description: Manage subscribers within lists
+  - name: Campaigns
+    description: Manage email campaigns
+  - name: Campaign Tracking
+    description: Track campaign opens and clicks
+  - name: Campaign Bounces
+    description: Manage campaign bounce records
+  - name: Countries
+    description: Get countries and zones
+  - name: Customers
+    description: Customer operations
+  - name: Templates
+    description: Manage email templates
+  - name: Transactional Emails
+    description: Send transactional emails
+
+paths:
+  # ==================== LISTS ====================
+  /lists:
+    get:
+      tags: [Lists]
+      summary: Get all lists
+      description: |
+        Retrieve all mailing lists with pagination.
+
+        ```javascript
+        const lists = new Lists(config);
+        const result = await lists.getLists({ page: 1, per_page: 10 });
+        ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListsResponse'
+    post:
+      tags: [Lists]
+      summary: Create a list
+      description: |
+        Create a new mailing list.
+
+        ```javascript
+        const lists = new Lists(config);
+        const result = await lists.create({
+          name: 'My List',
+          description: 'List description',
+          fromName: 'John Doe',
+          fromEmail: 'john@example.com',
+          replyTo: 'reply@example.com',
+          subject: 'Newsletter'
+        });
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateListRequest'
+      responses:
+        '200':
+          description: List created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateListResponse'
+
+  /lists/{list_uid}:
+    get:
+      tags: [Lists]
+      summary: Get a list
+      description: |
+        Get details of a specific list.
+
+        ```javascript
+        const result = await lists.getList({ listID: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListResponse'
+    put:
+      tags: [Lists]
+      summary: Update a list
+      description: |
+        Update an existing list.
+
+        ```javascript
+        const result = await lists.update({
+          listID: 'abc123',
+          name: 'Updated Name',
+          fromName: 'Jane Doe'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateListRequest'
+      responses:
+        '200':
+          description: List updated
+    delete:
+      tags: [Lists]
+      summary: Delete a list
+      description: |
+        Delete a mailing list.
+
+        ```javascript
+        const result = await lists.delete({ listID: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      responses:
+        '200':
+          description: List deleted
+
+  /lists/{list_uid}/copy:
+    post:
+      tags: [Lists]
+      summary: Copy a list
+      description: |
+        Create a copy of an existing list.
+
+        ```javascript
+        const result = await lists.copy({ listID: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      responses:
+        '200':
+          description: List copied
+
+  # ==================== LIST FIELDS ====================
+  /lists/{list_uid}/fields:
+    get:
+      tags: [List Fields]
+      summary: Get all fields
+      description: |
+        Get all custom fields for a list.
+
+        ```javascript
+        const fields = new ListFields(config);
+        const result = await fields.getFields({ listUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      responses:
+        '200':
+          description: Fields list
+    post:
+      tags: [List Fields]
+      summary: Create a field
+      description: |
+        Create a new custom field.
+
+        ```javascript
+        const result = await fields.create({
+          listUid: 'abc123',
+          type: 'text',
+          label: 'Company Name',
+          tag: 'COMPANY',
+          required: 'no',
+          visibility: 'visible'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFieldRequest'
+      responses:
+        '200':
+          description: Field created
+
+  /lists/{list_uid}/fields/{field_uid}:
+    get:
+      tags: [List Fields]
+      summary: Get a field
+      description: |
+        Get details of a specific field.
+
+        ```javascript
+        const result = await fields.getField({
+          listUid: 'abc123',
+          fieldUid: 'field456'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/fieldUid'
+      responses:
+        '200':
+          description: Field details
+    put:
+      tags: [List Fields]
+      summary: Update a field
+      description: |
+        Update an existing field.
+
+        ```javascript
+        const result = await fields.update({
+          listUid: 'abc123',
+          fieldUid: 'field456',
+          label: 'Updated Label',
+          required: 'yes'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/fieldUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFieldRequest'
+      responses:
+        '200':
+          description: Field updated
+    delete:
+      tags: [List Fields]
+      summary: Delete a field
+      description: |
+        Delete a field from a list.
+
+        ```javascript
+        const result = await fields.delete({
+          listUid: 'abc123',
+          fieldUid: 'field456'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/fieldUid'
+      responses:
+        '200':
+          description: Field deleted
+
+  /lists/fields/types:
+    get:
+      tags: [List Fields]
+      summary: Get available field types
+      description: |
+        Get all available field types that can be used when creating fields.
+
+        ```javascript
+        const result = await fields.getFieldTypes();
+        ```
+      responses:
+        '200':
+          description: Field types list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTypesResponse'
+
+  # ==================== LIST SEGMENTS ====================
+  /lists/{list_uid}/segments:
+    get:
+      tags: [List Segments]
+      summary: Get all segments
+      description: |
+        Get all segments for a list.
+
+        ```javascript
+        const segments = new ListSegments(config);
+        const result = await segments.getSegments({
+          listUid: 'abc123',
+          page: 1,
+          per_page: 10
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Segments list
+    post:
+      tags: [List Segments]
+      summary: Create a segment
+      description: |
+        Create a new segment with conditions.
+
+        ```javascript
+        const result = await segments.create({
+          listUid: 'abc123',
+          name: 'Active Users',
+          operatorMatch: 'all',
+          conditions: [
+            { field_id: '1', operator: 'is', value: 'active' }
+          ]
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSegmentRequest'
+      responses:
+        '200':
+          description: Segment created
+
+  /lists/{list_uid}/segments/{segment_uid}:
+    get:
+      tags: [List Segments]
+      summary: Get a segment
+      description: |
+        Get details of a specific segment.
+
+        ```javascript
+        const result = await segments.getSegment({
+          listUid: 'abc123',
+          segmentUid: 'seg456'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/segmentUid'
+      responses:
+        '200':
+          description: Segment details
+    put:
+      tags: [List Segments]
+      summary: Update a segment
+      description: |
+        Update an existing segment.
+
+        ```javascript
+        const result = await segments.update({
+          listUid: 'abc123',
+          segmentUid: 'seg456',
+          name: 'Updated Segment',
+          operatorMatch: 'any'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/segmentUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSegmentRequest'
+      responses:
+        '200':
+          description: Segment updated
+    delete:
+      tags: [List Segments]
+      summary: Delete a segment
+      description: |
+        Delete a segment from a list.
+
+        ```javascript
+        const result = await segments.delete({
+          listUid: 'abc123',
+          segmentUid: 'seg456'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/segmentUid'
+      responses:
+        '200':
+          description: Segment deleted
+
+  /lists/{list_uid}/segments/{segment_uid}/subscribers:
+    get:
+      tags: [List Segments]
+      summary: Get segment subscribers
+      description: |
+        Get all subscribers matching a segment.
+
+        ```javascript
+        const result = await segments.getSubscribers({
+          listUid: 'abc123',
+          segmentUid: 'seg456',
+          page: 1,
+          per_page: 10
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/segmentUid'
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Segment subscribers
+
+  /lists/segments/condition-operators:
+    get:
+      tags: [List Segments]
+      summary: Get condition operators
+      description: |
+        Get all available condition operators for segment conditions.
+
+        ```javascript
+        const result = await segments.getConditionOperators();
+        ```
+      responses:
+        '200':
+          description: Condition operators list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConditionOperatorsResponse'
+
+  # ==================== SUBSCRIBERS ====================
+  /lists/{list_uid}/subscribers:
+    get:
+      tags: [List Subscribers]
+      summary: Get all subscribers
+      description: |
+        Get all subscribers from a list with pagination.
+
+        ```javascript
+        const subscribers = new ListSubscribers(config);
+        const result = await subscribers.getSubscribers({
+          listUid: 'abc123',
+          page: 1,
+          per_page: 10
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribersResponse'
+    post:
+      tags: [List Subscribers]
+      summary: Create a subscriber
+      description: |
+        Add a new subscriber to a list.
+
+        ```javascript
+        const result = await subscribers.create({
+          listUid: 'abc123',
+          data: {
+            EMAIL: 'subscriber@example.com',
+            FNAME: 'John',
+            LNAME: 'Doe'
+          }
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriberRequest'
+      responses:
+        '200':
+          description: Subscriber created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSubscriberResponse'
+
+  /lists/{list_uid}/subscribers/{subscriber_uid}:
+    get:
+      tags: [List Subscribers]
+      summary: Get a subscriber
+      description: |
+        Get details of a specific subscriber.
+
+        ```javascript
+        const result = await subscribers.getSubscriber({
+          listUid: 'abc123',
+          subscriberUid: 'xyz789'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/subscriberUid'
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags: [List Subscribers]
+      summary: Update a subscriber
+      description: |
+        Update subscriber data.
+
+        ```javascript
+        const result = await subscribers.update({
+          listUid: 'abc123',
+          subscriberUid: 'xyz789',
+          data: { FNAME: 'Jane' }
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/subscriberUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriberRequest'
+      responses:
+        '200':
+          description: Subscriber updated
+    delete:
+      tags: [List Subscribers]
+      summary: Delete a subscriber
+      description: |
+        Remove a subscriber from a list.
+
+        ```javascript
+        const result = await subscribers.delete({
+          listUid: 'abc123',
+          subscriberUid: 'xyz789'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/subscriberUid'
+      responses:
+        '200':
+          description: Subscriber deleted
+
+  /lists/{list_uid}/subscribers/{subscriber_uid}/unsubscribe:
+    put:
+      tags: [List Subscribers]
+      summary: Unsubscribe a subscriber
+      description: |
+        Unsubscribe a subscriber by UID.
+
+        ```javascript
+        const result = await subscribers.unsubscribe({
+          listUid: 'abc123',
+          subscriberUid: 'xyz789'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/subscriberUid'
+      responses:
+        '200':
+          description: Subscriber unsubscribed
+
+  /lists/{list_uid}/subscribers/search-by-email:
+    get:
+      tags: [List Subscribers]
+      summary: Search subscriber by email
+      description: |
+        Find a subscriber by email address.
+
+        ```javascript
+        const result = await subscribers.emailSearch({
+          listUid: 'abc123',
+          subscriberEmail: 'user@example.com'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Subscriber found
+
+  /lists/{list_uid}/subscribers/search-by-custom-fields:
+    get:
+      tags: [List Subscribers]
+      summary: Search by custom fields
+      description: |
+        Search subscribers by custom field values.
+
+        ```javascript
+        const result = await subscribers.searchByCustomFields({
+          listUid: 'abc123',
+          fields: { FNAME: 'John', COMPANY: 'Acme' }
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      responses:
+        '200':
+          description: Subscribers found
+
+  /lists/{list_uid}/subscribers/bulk:
+    post:
+      tags: [List Subscribers]
+      summary: Bulk create/update subscribers
+      description: |
+        Create or update multiple subscribers at once.
+
+        ```javascript
+        const result = await subscribers.bulk({
+          listUid: 'abc123',
+          subscribers: [
+            { EMAIL: 'user1@example.com', FNAME: 'User 1' },
+            { EMAIL: 'user2@example.com', FNAME: 'User 2' }
+          ]
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscribers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SubscriberData'
+      responses:
+        '200':
+          description: Bulk operation completed
+
+  /lists/{list_uid}/subscribers/unsubscribe-by-email:
+    put:
+      tags: [List Subscribers]
+      summary: Unsubscribe by email
+      description: |
+        Unsubscribe a subscriber using their email address.
+
+        ```javascript
+        const result = await subscribers.unsubscribeByEmail({
+          listUid: 'abc123',
+          email: 'user@example.com'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                EMAIL:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Subscriber unsubscribed
+
+  /lists/{list_uid}/subscribers/delete-by-email:
+    delete:
+      tags: [List Subscribers]
+      summary: Delete by email
+      description: |
+        Delete a subscriber using their email address.
+
+        ```javascript
+        const result = await subscribers.deleteByEmail({
+          listUid: 'abc123',
+          email: 'user@example.com'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Subscriber deleted
+
+  /lists/{list_uid}/subscribers/create-update:
+    post:
+      tags: [List Subscribers]
+      summary: Create or update subscriber
+      description: |
+        Create a new subscriber or update if exists (upsert).
+
+        ```javascript
+        const result = await subscribers.createOrUpdate({
+          listUid: 'abc123',
+          data: {
+            EMAIL: 'user@example.com',
+            FNAME: 'John'
+          }
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberData'
+      responses:
+        '200':
+          description: Subscriber created or updated
+
+  /lists/subscribers/search-by-email-in-all-lists:
+    get:
+      tags: [List Subscribers]
+      summary: Search email in all lists
+      description: |
+        Search for a subscriber across all lists.
+
+        ```javascript
+        const result = await subscribers.searchByEmailInAllLists({
+          email: 'user@example.com'
+        });
+        ```
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Subscriber found in lists
+
+  /lists/subscribers/unsubscribe-by-email-from-all-lists:
+    put:
+      tags: [List Subscribers]
+      summary: Unsubscribe from all lists
+      description: |
+        Unsubscribe an email from all lists.
+
+        ```javascript
+        const result = await subscribers.unsubscribeByEmailFromAllLists({
+          email: 'user@example.com'
+        });
+        ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                EMAIL:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Unsubscribed from all lists
+
+  # ==================== CAMPAIGNS ====================
+  /campaigns:
+    get:
+      tags: [Campaigns]
+      summary: Get all campaigns
+      description: |
+        Retrieve all campaigns with pagination.
+
+        ```javascript
+        const campaigns = new Campaigns(config);
+        const result = await campaigns.getCampaigns({ page: 1, per_page: 10 });
+        ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+    post:
+      tags: [Campaigns]
+      summary: Create a campaign
+      description: |
+        Create a new email campaign.
+
+        ```javascript
+        const result = await campaigns.create({
+          name: 'My Campaign',
+          type: 'regular',
+          fromName: 'John Doe',
+          fromEmail: 'john@example.com',
+          subject: 'Newsletter',
+          replyTo: 'reply@example.com',
+          sendAt: '2024-12-31 10:00:00',
+          listId: 'abc123',
+          templateId: 'tpl123'
+        });
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaignRequest'
+      responses:
+        '200':
+          description: Campaign created
+
+  /campaigns/{campaign_uid}:
+    get:
+      tags: [Campaigns]
+      summary: Get a campaign
+      description: |
+        Get details of a specific campaign.
+
+        ```javascript
+        const result = await campaigns.getCampaign({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags: [Campaigns]
+      summary: Update a campaign
+      description: |
+        Update an existing campaign.
+
+        ```javascript
+        const result = await campaigns.update({
+          campaignUid: 'abc123',
+          name: 'Updated Campaign',
+          subject: 'New Subject'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignRequest'
+      responses:
+        '200':
+          description: Campaign updated
+    delete:
+      tags: [Campaigns]
+      summary: Delete a campaign
+      description: |
+        Delete a campaign.
+
+        ```javascript
+        const result = await campaigns.delete({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Campaign deleted
+
+  /campaigns/{campaign_uid}/copy:
+    post:
+      tags: [Campaigns]
+      summary: Copy a campaign
+      description: |
+        Create a copy of an existing campaign.
+
+        ```javascript
+        const result = await campaigns.copy({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Campaign copied
+
+  /campaigns/{campaign_uid}/pause-unpause:
+    put:
+      tags: [Campaigns]
+      summary: Pause/Unpause campaign
+      description: |
+        Toggle pause state of a campaign.
+
+        ```javascript
+        const result = await campaigns.pauseUnpause({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Campaign pause state toggled
+
+  /campaigns/{campaign_uid}/mark-sent:
+    put:
+      tags: [Campaigns]
+      summary: Mark campaign as sent
+      description: |
+        Mark a campaign as sent.
+
+        ```javascript
+        const result = await campaigns.markSent({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Campaign marked as sent
+
+  /campaigns/{campaign_uid}/stats:
+    get:
+      tags: [Campaigns]
+      summary: Get campaign stats
+      description: |
+        Get statistics for a campaign.
+
+        ```javascript
+        const result = await campaigns.getStats({ campaignUid: 'abc123' });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Campaign statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignStatsResponse'
+
+  # ==================== CAMPAIGN TRACKING ====================
+  /campaigns/{campaign_uid}/track-opening/{subscriber_uid}:
+    get:
+      tags: [Campaign Tracking]
+      summary: Track email open
+      description: |
+        Track when a subscriber opens an email.
+
+        ```javascript
+        const tracking = new CampaignTracking(config);
+        const result = await tracking.trackOpen({
+          campaignUid: 'abc123',
+          subscriberUid: 'xyz789'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+        - $ref: '#/components/parameters/subscriberUid'
+      responses:
+        '200':
+          description: Open tracked
+
+  /campaigns/{campaign_uid}/track-url/{subscriber_uid}/{hash}:
+    get:
+      tags: [Campaign Tracking]
+      summary: Track URL click
+      description: |
+        Track when a subscriber clicks a URL.
+
+        ```javascript
+        const result = await tracking.trackClick({
+          campaignUid: 'abc123',
+          subscriberUid: 'xyz789',
+          hash: 'urlhash123'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+        - $ref: '#/components/parameters/subscriberUid'
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Click tracked
+
+  /lists/{list_uid}/subscribers/{subscriber_uid}/unsubscribe/{campaign_uid}:
+    put:
+      tags: [Campaign Tracking]
+      summary: Track unsubscribe
+      description: |
+        Track when a subscriber unsubscribes from a campaign.
+
+        ```javascript
+        const result = await tracking.trackUnsubscribe({
+          listUid: 'list123',
+          subscriberUid: 'xyz789',
+          campaignUid: 'abc123'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/listUid'
+        - $ref: '#/components/parameters/subscriberUid'
+        - $ref: '#/components/parameters/campaignUid'
+      responses:
+        '200':
+          description: Unsubscribe tracked
+
+  # ==================== CAMPAIGN BOUNCES ====================
+  /campaigns/{campaign_uid}/bounces:
+    get:
+      tags: [Campaign Bounces]
+      summary: Get campaign bounces
+      description: |
+        Get all bounce records for a campaign.
+
+        ```javascript
+        const bounces = new CampaignBounces(config);
+        const result = await bounces.getBounces({
+          campaignUid: 'abc123',
+          page: 1,
+          per_page: 10
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Bounce records
+    post:
+      tags: [Campaign Bounces]
+      summary: Create a bounce
+      description: |
+        Manually create a bounce record.
+
+        ```javascript
+        const result = await bounces.createBounce({
+          campaignUid: 'abc123',
+          message: 'Mailbox full',
+          bounceType: 'soft',
+          subscriberUid: 'xyz789'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/campaignUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBounceRequest'
+      responses:
+        '200':
+          description: Bounce created
+
+  # ==================== COUNTRIES ====================
+  /countries:
+    get:
+      tags: [Countries]
+      summary: Get all countries
+      description: |
+        Get list of all countries.
+
+        ```javascript
+        const countries = new Countries(config);
+        const result = await countries.getAll({ page: 1, per_page: 10 });
+        ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Countries list
+
+  /countries/{country_id}/zones:
+    get:
+      tags: [Countries]
+      summary: Get country zones
+      description: |
+        Get zones/states for a country.
+
+        ```javascript
+        const result = await countries.getAllZones({
+          countryID: 1,
+          page: 1,
+          per_page: 10
+        });
+        ```
+      parameters:
+        - name: country_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Zones list
+
+  # ==================== CUSTOMERS ====================
+  /customers:
+    post:
+      tags: [Customers]
+      summary: Create a customer
+      description: |
+        Create a new customer account.
+
+        ```javascript
+        const customers = new Customers(config);
+        const result = await customers.create({
+          email: 'customer@example.com',
+          password: 'securepassword',
+          firstName: 'John',
+          lastName: 'Doe'
+        });
+        ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+      responses:
+        '200':
+          description: Customer created
+
+  # ==================== TEMPLATES ====================
+  /templates:
+    get:
+      tags: [Templates]
+      summary: Get all templates
+      description: |
+        Retrieve all email templates. Use the `name` parameter to filter by template name.
+
+        ```javascript
+        const templates = new Templates(config);
+        const result = await templates.getTemplates({ page: 1, per_page: 10 });
+
+        // Search by name using the search method
+        const filtered = await templates.search({ name: 'newsletter' });
+        ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: Filter by template name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Templates list
+    post:
+      tags: [Templates]
+      summary: Create a template
+      description: |
+        Create a new email template.
+
+        ```javascript
+        const result = await templates.create({
+          name: 'My Template',
+          content: '<html><body>Hello [FNAME]!</body></html>'
+        });
+        ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequest'
+      responses:
+        '200':
+          description: Template created
+
+  /templates/{template_uid}:
+    get:
+      tags: [Templates]
+      summary: Get a template
+      description: |
+        Get details of a specific template.
+
+        ```javascript
+        const result = await templates.getTemplate({
+          templateUid: 'tpl123'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/templateUid'
+      responses:
+        '200':
+          description: Template details
+    put:
+      tags: [Templates]
+      summary: Update a template
+      description: |
+        Update an existing template.
+
+        ```javascript
+        const result = await templates.update({
+          templateUid: 'tpl123',
+          name: 'Updated Template',
+          content: '<html><body>Updated content</body></html>'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/templateUid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTemplateRequest'
+      responses:
+        '200':
+          description: Template updated
+    delete:
+      tags: [Templates]
+      summary: Delete a template
+      description: |
+        Delete a template.
+
+        ```javascript
+        const result = await templates.delete({
+          templateUid: 'tpl123'
+        });
+        ```
+      parameters:
+        - $ref: '#/components/parameters/templateUid'
+      responses:
+        '200':
+          description: Template deleted
+
+  # ==================== TRANSACTIONAL EMAILS ====================
+  /transactional-emails:
+    get:
+      tags: [Transactional Emails]
+      summary: Get all transactional emails
+      description: |
+        Retrieve all transactional email logs.
+
+        ```javascript
+        const transactional = new TransactionEmail(config);
+        const result = await transactional.getAll({ page: 1, per_page: 10 });
+        ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transactional emails list
+    post:
+      tags: [Transactional Emails]
+      summary: Send transactional email
+      description: |
+        Send a transactional email with optional attachments.
+
+        ```javascript
+        const result = await transactional.create({
+          toEmail: 'recipient@example.com',
+          toName: 'John Doe',
+          fromEmail: 'sender@example.com',
+          fromName: 'My App',
+          subject: 'Welcome!',
+          body: '<html><body>Welcome!</body></html>',
+          plainText: 'Welcome!',
+          sendAt: '2024-12-31 10:00:00',
+          replyToEmail: 'reply@example.com',
+          replyToName: 'Support'
+        });
+        ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendTransactionalRequest'
+      responses:
+        '200':
+          description: Email sent
+
+  /transactional-emails/{email_uid}:
+    get:
+      tags: [Transactional Emails]
+      summary: Get transactional email
+      description: |
+        Get details of a specific transactional email.
+
+        ```javascript
+        const result = await transactional.getOne({
+          emailUid: 'email123'
+        });
+        ```
+      parameters:
+        - name: email_uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email details
+    delete:
+      tags: [Transactional Emails]
+      summary: Delete transactional email
+      description: |
+        Delete a transactional email.
+
+        ```javascript
+        const result = await transactional.delete({
+          emailUid: 'email123'
+        });
+        ```
+      parameters:
+        - name: email_uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email deleted
+
+components:
+  parameters:
+    listUid:
+      name: list_uid
+      in: path
+      required: true
+      description: Unique identifier of the list
+      schema:
+        type: string
+    subscriberUid:
+      name: subscriber_uid
+      in: path
+      required: true
+      description: Unique identifier of the subscriber
+      schema:
+        type: string
+    campaignUid:
+      name: campaign_uid
+      in: path
+      required: true
+      description: Unique identifier of the campaign
+      schema:
+        type: string
+    templateUid:
+      name: template_uid
+      in: path
+      required: true
+      description: Unique identifier of the template
+      schema:
+        type: string
+    segmentUid:
+      name: segment_uid
+      in: path
+      required: true
+      description: Unique identifier of the segment
+      schema:
+        type: string
+    fieldUid:
+      name: field_uid
+      in: path
+      required: true
+      description: Unique identifier of the field
+      schema:
+        type: string
+
+  schemas:
+    ListsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            count:
+              type: integer
+            total_pages:
+              type: integer
+            current_page:
+              type: integer
+            records:
+              type: array
+              items:
+                $ref: '#/components/schemas/ListRecord'
+
+    ListRecord:
+      type: object
+      properties:
+        list_uid:
+          type: string
+        name:
+          type: string
+        display_name:
+          type: string
+        subscribers_count:
+          type: integer
+
+    ListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            record:
+              $ref: '#/components/schemas/ListRecord'
+
+    CreateListRequest:
+      type: object
+      required: [name, fromName, fromEmail, replyTo, subject]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+          format: email
+        replyTo:
+          type: string
+          format: email
+        subject:
+          type: string
+        notificationSubscribe:
+          type: string
+          enum: ['yes', 'no']
+          description: Send notification when subscriber added
+        notificationUnsubscribe:
+          type: string
+          enum: ['yes', 'no']
+          description: Send notification when subscriber unsubscribes
+        notificationSubscribeTo:
+          type: string
+          format: email
+          description: Email to notify on subscribe
+        notificationUnsubscribeTo:
+          type: string
+          format: email
+          description: Email to notify on unsubscribe
+        companyName:
+          type: string
+        companyCountry:
+          type: string
+        companyZone:
+          type: string
+        companyAddress1:
+          type: string
+        companyAddress2:
+          type: string
+        companyZoneName:
+          type: string
+          description: Zone name when country doesn't have required zone
+        companyCity:
+          type: string
+        companyZipCode:
+          type: string
+
+    CreateListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            record:
+              type: object
+              properties:
+                list_uid:
+                  type: string
+
+    UpdateListRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+        replyTo:
+          type: string
+        subject:
+          type: string
+        notificationSubscribe:
+          type: string
+          enum: ['yes', 'no']
+          description: Send notification when subscriber added
+        notificationUnsubscribe:
+          type: string
+          enum: ['yes', 'no']
+          description: Send notification when subscriber unsubscribes
+        notificationSubscribeTo:
+          type: string
+          format: email
+          description: Email to notify on subscribe
+        notificationUnsubscribeTo:
+          type: string
+          format: email
+          description: Email to notify on unsubscribe
+        companyName:
+          type: string
+        companyCountry:
+          type: string
+        companyZone:
+          type: string
+        companyAddress1:
+          type: string
+        companyAddress2:
+          type: string
+        companyZoneName:
+          type: string
+          description: Zone name when country doesn't have required zone
+        companyCity:
+          type: string
+        companyZipCode:
+          type: string
+
+    SubscribersResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            count:
+              type: integer
+            total_pages:
+              type: integer
+            current_page:
+              type: integer
+            records:
+              type: array
+              items:
+                $ref: '#/components/schemas/SubscriberRecord'
+
+    SubscriberRecord:
+      type: object
+      properties:
+        subscriber_uid:
+          type: string
+        EMAIL:
+          type: string
+        status:
+          type: string
+          enum: [confirmed, unconfirmed, unsubscribed, blacklisted]
+        date_added:
+          type: string
+
+    CreateSubscriberRequest:
+      type: object
+      required: [EMAIL]
+      properties:
+        EMAIL:
+          type: string
+          format: email
+        FNAME:
+          type: string
+        LNAME:
+          type: string
+
+    CreateSubscriberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            record:
+              type: object
+              properties:
+                subscriber_uid:
+                  type: string
+
+    UpdateSubscriberRequest:
+      type: object
+      properties:
+        EMAIL:
+          type: string
+        FNAME:
+          type: string
+        LNAME:
+          type: string
+
+    SubscriberData:
+      type: object
+      required: [EMAIL]
+      properties:
+        EMAIL:
+          type: string
+          format: email
+        FNAME:
+          type: string
+        LNAME:
+          type: string
+
+    CreateCampaignRequest:
+      type: object
+      required: [name, fromName, fromEmail, subject, replyTo, sendAt, listId, templateId]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [regular, autoresponder]
+          default: regular
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+          format: email
+        subject:
+          type: string
+        replyTo:
+          type: string
+          format: email
+        sendAt:
+          type: string
+          description: 'Format: YYYY-MM-DD hh:mm:ss'
+        listId:
+          type: string
+        segmentId:
+          type: string
+        templateId:
+          type: string
+
+    UpdateCampaignRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+        subject:
+          type: string
+        replyTo:
+          type: string
+        sendAt:
+          type: string
+        listId:
+          type: string
+        segmentId:
+          type: string
+        templateId:
+          type: string
+
+    CampaignStatsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            campaign_status:
+              type: string
+            subscribers_count:
+              type: integer
+            processed_count:
+              type: integer
+            delivery_success_count:
+              type: integer
+            delivery_error_count:
+              type: integer
+            opens_count:
+              type: integer
+            unique_opens_count:
+              type: integer
+            clicks_count:
+              type: integer
+            unique_clicks_count:
+              type: integer
+            unsubscribes_count:
+              type: integer
+            bounces_count:
+              type: integer
+
+    CreateBounceRequest:
+      type: object
+      required: [message, bounceType, subscriberUid]
+      properties:
+        message:
+          type: string
+        bounceType:
+          type: string
+          enum: [hard, soft, internal]
+        subscriberUid:
+          type: string
+
+    CreateTemplateRequest:
+      type: object
+      required: [name, content]
+      properties:
+        name:
+          type: string
+        content:
+          type: string
+          description: HTML content
+        inlineCss:
+          type: string
+          enum: ['yes', 'no']
+        minify:
+          type: string
+          enum: ['yes', 'no']
+
+    UpdateTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        content:
+          type: string
+        inlineCss:
+          type: string
+          enum: ['yes', 'no']
+        minify:
+          type: string
+          enum: ['yes', 'no']
+
+    SendTransactionalRequest:
+      type: object
+      required: [toEmail, toName, fromEmail, fromName, subject, body, sendAt]
+      properties:
+        toEmail:
+          type: string
+          format: email
+        toName:
+          type: string
+        fromEmail:
+          type: string
+          format: email
+        fromName:
+          type: string
+        replyToEmail:
+          type: string
+          format: email
+        replyToName:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+          description: HTML body
+        plainText:
+          type: string
+        sendAt:
+          type: string
+          description: 'UTC datetime (Y-m-d H:i:s format)'
+
+    CreateFieldRequest:
+      type: object
+      required: [type, label, tag]
+      properties:
+        type:
+          type: string
+          enum: [text, textarea, dropdown, multiselect, date, datetime, checkbox, radiobuttons, email, url, phonenumber, yearsrange]
+        label:
+          type: string
+        tag:
+          type: string
+          description: Field tag (uppercase)
+        required:
+          type: string
+          enum: ['yes', 'no']
+        visibility:
+          type: string
+          enum: [visible, hidden]
+        sortOrder:
+          type: integer
+        defaultValue:
+          type: string
+        helpText:
+          type: string
+        minLength:
+          type: integer
+        maxLength:
+          type: integer
+        contentRule:
+          type: string
+        options:
+          type: object
+          additionalProperties:
+            type: string
+
+    UpdateFieldRequest:
+      type: object
+      properties:
+        label:
+          type: string
+        tag:
+          type: string
+        required:
+          type: string
+          enum: ['yes', 'no']
+        visibility:
+          type: string
+          enum: [visible, hidden]
+        sortOrder:
+          type: integer
+        defaultValue:
+          type: string
+        helpText:
+          type: string
+
+    FieldTypesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            records:
+              type: array
+              items:
+                type: object
+                properties:
+                  identifier:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+
+    CreateSegmentRequest:
+      type: object
+      required: [name, operatorMatch]
+      properties:
+        name:
+          type: string
+        operatorMatch:
+          type: string
+          enum: [any, all]
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+              operator:
+                type: string
+              value:
+                type: string
+
+    UpdateSegmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        operatorMatch:
+          type: string
+          enum: [any, all]
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+              operator:
+                type: string
+              value:
+                type: string
+
+    ConditionOperatorsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            records:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  slug:
+                    type: string
+
+    CreateCustomerRequest:
+      type: object
+      required: [email, password, firstName, lastName]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        firstName:
+          type: string
+        lastName:
+          type: string
+        timezone:
+          type: string
+        birthDate:
+          type: string
+          description: 'Birth date (Y-m-d format)'
+        phone:
+          type: string
+        company:
+          type: object
+          properties:
+            name:
+              type: string
+            country:
+              type: string
+            zone:
+              type: string
+            city:
+              type: string
+            zipCode:
+              type: string
+            address1:
+              type: string
+            address2:
+              type: string
+            phone:
+              type: string
+            website:
+              type: string
