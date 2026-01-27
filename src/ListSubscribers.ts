@@ -14,7 +14,21 @@ import {
 	UnsubscribeSubscriberParams,
 	UnsubscribeSubscriberResponse,
 	UpdateSubscriberParams,
-	UpdateSubscriberResponse
+	UpdateSubscriberResponse,
+	SearchByEmailInAllListsParams,
+	SearchByEmailInAllListsResponse,
+	SearchByCustomFieldsParams,
+	SearchByCustomFieldsResponse,
+	BulkSubscribersParams,
+	BulkSubscribersResponse,
+	UnsubscribeByEmailParams,
+	UnsubscribeByEmailResponse,
+	UnsubscribeByEmailFromAllListsParams,
+	UnsubscribeByEmailFromAllListsResponse,
+	DeleteByEmailParams,
+	DeleteByEmailResponse,
+	CreateOrUpdateSubscriberParams,
+	CreateOrUpdateSubscriberResponse
 } from "./types/ListSubscribers";
 
 class ListSubscribers extends Request {
@@ -92,7 +106,7 @@ class ListSubscribers extends Request {
 		this.method = Request.Type.GET;
 		this.url = `/lists/${listUid}/subscribers/search-by-email`;
 		this.data = {
-			EMAIL: subscriberEmail
+			email: subscriberEmail
 		};
 
 		return this.send();
@@ -179,6 +193,144 @@ class ListSubscribers extends Request {
 		this.method = Request.Type.PUT;
 		this.url = `/lists/${listUid}/subscribers/${subscriberUid}/unsubscribe`;
 		this.data = {};
+
+		return this.send();
+	}
+
+	/**
+	 * @description Search subscriber by email in all lists
+	 * @param {SearchByEmailInAllListsParams} params - Params of the request
+	 * @param {string} params.email - Subscriber email
+	 * @returns {Promise<SearchByEmailInAllListsResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#search-by-email-in-all-lists
+	 */
+	searchByEmailInAllLists({
+		email
+	}: SearchByEmailInAllListsParams): Promise<SearchByEmailInAllListsResponse> {
+		this.method = Request.Type.GET;
+		this.url = `/lists/subscribers/search-by-email-in-all-lists`;
+		this.data = {
+			email: email
+		};
+
+		return this.send();
+	}
+
+	/**
+	 * @description Search subscribers by custom fields
+	 * @param {SearchByCustomFieldsParams} params - Params of the request
+	 * @param {string} params.listUid - List UID
+	 * @param {Record<string, string>} params.fields - Custom fields to search
+	 * @returns {Promise<SearchByCustomFieldsResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#search-by-custom-fields
+	 */
+	searchByCustomFields({
+		listUid,
+		fields
+	}: SearchByCustomFieldsParams): Promise<SearchByCustomFieldsResponse> {
+		this.method = Request.Type.GET;
+		this.url = `/lists/${listUid}/subscribers/search-by-custom-fields`;
+		this.data = fields;
+
+		return this.send();
+	}
+
+	/**
+	 * @description Bulk create/update subscribers
+	 * @param {BulkSubscribersParams} params - Params of the request
+	 * @param {string} params.listUid - List UID
+	 * @param {CreateSubscriberParamsData[]} params.subscribers - Array of subscriber data
+	 * @returns {Promise<BulkSubscribersResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#create-subscribers-in-bulk
+	 */
+	bulk({
+		listUid,
+		subscribers
+	}: BulkSubscribersParams): Promise<BulkSubscribersResponse> {
+		this.method = Request.Type.POST;
+		this.url = `/lists/${listUid}/subscribers/bulk`;
+		this.data = { subscribers: subscribers };
+
+		return this.send();
+	}
+
+	/**
+	 * @description Unsubscribe subscriber by email
+	 * @param {UnsubscribeByEmailParams} params - Params of the request
+	 * @param {string} params.listUid - List UID
+	 * @param {string} params.email - Subscriber email
+	 * @returns {Promise<UnsubscribeByEmailResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#unsubscribe-a-subscriber-by-email
+	 */
+	unsubscribeByEmail({
+		listUid,
+		email
+	}: UnsubscribeByEmailParams): Promise<UnsubscribeByEmailResponse> {
+		this.method = Request.Type.PUT;
+		this.url = `/lists/${listUid}/subscribers/unsubscribe-by-email`;
+		this.data = { EMAIL: email };
+
+		return this.send();
+	}
+
+	/**
+	 * @description Unsubscribe subscriber by email from all lists
+	 * @param {UnsubscribeByEmailFromAllListsParams} params - Params of the request
+	 * @param {string} params.email - Subscriber email
+	 * @returns {Promise<UnsubscribeByEmailFromAllListsResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#unsubscribe-by-email-from-all-lists
+	 */
+	unsubscribeByEmailFromAllLists({
+		email
+	}: UnsubscribeByEmailFromAllListsParams): Promise<UnsubscribeByEmailFromAllListsResponse> {
+		this.method = Request.Type.PUT;
+		this.url = `/lists/subscribers/unsubscribe-by-email-from-all-lists`;
+		this.data = { EMAIL: email };
+
+		return this.send();
+	}
+
+	/**
+	 * @description Delete subscriber by email
+	 * @param {DeleteByEmailParams} params - Params of the request
+	 * @param {string} params.listUid - List UID
+	 * @param {string} params.email - Subscriber email
+	 * @returns {Promise<DeleteByEmailResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#delete-a-subscriber-by-email
+	 */
+	deleteByEmail({
+		listUid,
+		email
+	}: DeleteByEmailParams): Promise<DeleteByEmailResponse> {
+		this.method = Request.Type.DELETE;
+		this.url = `/lists/${listUid}/subscribers/delete-by-email`;
+		this.data = { email: email };
+
+		return this.send();
+	}
+
+	/**
+	 * @description Create or update a subscriber (upsert)
+	 * @param {CreateOrUpdateSubscriberParams} params - Params of the request
+	 * @param {string} params.listUid - List UID
+	 * @param {CreateSubscriberParamsData} params.data - Subscriber data
+	 * @returns {Promise<CreateOrUpdateSubscriberResponse>} - Promise of the response
+	 * @memberof ListSubscribers
+	 * @see https://api-docs.mailwizz.com/#create-or-update-a-subscriber
+	 */
+	createOrUpdate({
+		listUid,
+		data
+	}: CreateOrUpdateSubscriberParams): Promise<CreateOrUpdateSubscriberResponse> {
+		this.method = Request.Type.POST;
+		this.url = `/lists/${listUid}/subscribers/create-update`;
+		this.data = data;
 
 		return this.send();
 	}

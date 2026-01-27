@@ -84,3 +84,81 @@ export interface GetTemplateResponseRecord {
 	content: string;
 	screenshot: string;
 }
+
+/**
+ * @description Interface for the parameters of the API call to search templates
+ * @interface SearchTemplatesParams
+ * @memberof Templates
+ */
+export interface SearchTemplatesParams {
+	page?: number;
+	per_page?: number;
+	name?: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to create a template
+ * @interface CreateTemplateParams
+ * @memberof Templates
+ */
+export interface CreateTemplateParams {
+	name: string;
+	content: string;
+	inlineCss?: string;
+	minify?: string;
+}
+
+/**
+ * @description Interface for the response of the API call to create a template
+ * @interface CreateTemplateResponse
+ * @memberof Templates
+ */
+export interface CreateTemplateResponse {
+	status: string;
+	template_uid: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to update a template
+ * @interface UpdateTemplateParams
+ * @memberof Templates
+ */
+export interface UpdateTemplateParams {
+	templateUid: string;
+	name?: string;
+	content?: string;
+	inlineCss?: string;
+	minify?: string;
+}
+
+/**
+ * @description Interface for the response of the API call to update a template
+ * @interface UpdateTemplateResponse
+ * @memberof Templates
+ */
+export interface UpdateTemplateResponse {
+	status: string;
+	data: {
+		record: {
+			template_uid: string;
+		};
+	};
+}
+
+/**
+ * @description Interface for the parameters of the API call to delete a template
+ * @interface DeleteTemplateParams
+ * @memberof Templates
+ */
+export interface DeleteTemplateParams {
+	templateUid: string;
+}
+
+/**
+ * @description Interface for the response of the API call to delete a template
+ * @interface DeleteTemplateResponse
+ * @memberof Templates
+ */
+export interface DeleteTemplateResponse {
+	status: string;
+}

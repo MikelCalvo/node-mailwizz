@@ -371,3 +371,175 @@ export interface UnsubscribeSubscriberParams {
 export interface UnsubscribeSubscriberResponse {
 	status: string;
 }
+
+/**
+ * @description Interface for the parameters of the API call to search by email in all lists
+ * @interface SearchByEmailInAllListsParams
+ * @memberof ListSubscribers
+ */
+export interface SearchByEmailInAllListsParams {
+	email: string;
+}
+
+/**
+ * @description Interface for the response of the API call to search by email in all lists
+ * @interface SearchByEmailInAllListsResponse
+ * @memberof ListSubscribers
+ */
+export interface SearchByEmailInAllListsResponse {
+	status: string;
+	data: {
+		records: SearchByEmailInAllListsRecord[];
+	};
+}
+
+/**
+ * @description Interface for search by email in all lists record
+ * @interface SearchByEmailInAllListsRecord
+ * @memberof ListSubscribers
+ */
+export interface SearchByEmailInAllListsRecord {
+	subscriber_uid: string;
+	email: string;
+	status: string;
+	date_added: string;
+	list: {
+		list_uid: string;
+		name: string;
+	};
+}
+
+/**
+ * @description Interface for the parameters of the API call to search by custom fields
+ * @interface SearchByCustomFieldsParams
+ * @memberof ListSubscribers
+ */
+export interface SearchByCustomFieldsParams {
+	listUid: string;
+	fields: Record<string, string>;
+}
+
+/**
+ * @description Interface for the response of the API call to search by custom fields
+ * @interface SearchByCustomFieldsResponse
+ * @memberof ListSubscribers
+ */
+export interface SearchByCustomFieldsResponse {
+	status: string;
+	data: {
+		records: GetSubscribersResponseRecord[];
+	};
+}
+
+/**
+ * @description Interface for the parameters of the API call to bulk create/update subscribers
+ * @interface BulkSubscribersParams
+ * @memberof ListSubscribers
+ */
+export interface BulkSubscribersParams {
+	listUid: string;
+	subscribers: CreateSubscriberParamsData[];
+}
+
+/**
+ * @description Interface for the response of the API call to bulk create/update subscribers
+ * @interface BulkSubscribersResponse
+ * @memberof ListSubscribers
+ */
+export interface BulkSubscribersResponse {
+	status: string;
+	data: {
+		records: BulkSubscriberRecord[];
+	};
+}
+
+/**
+ * @description Interface for bulk subscriber record
+ * @interface BulkSubscriberRecord
+ * @memberof ListSubscribers
+ */
+export interface BulkSubscriberRecord {
+	data: CreateSubscriberParamsData;
+	status: string;
+	subscriber_uid?: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to unsubscribe by email
+ * @interface UnsubscribeByEmailParams
+ * @memberof ListSubscribers
+ */
+export interface UnsubscribeByEmailParams {
+	listUid: string;
+	email: string;
+}
+
+/**
+ * @description Interface for the response of the API call to unsubscribe by email
+ * @interface UnsubscribeByEmailResponse
+ * @memberof ListSubscribers
+ */
+export interface UnsubscribeByEmailResponse {
+	status: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to unsubscribe by email from all lists
+ * @interface UnsubscribeByEmailFromAllListsParams
+ * @memberof ListSubscribers
+ */
+export interface UnsubscribeByEmailFromAllListsParams {
+	email: string;
+}
+
+/**
+ * @description Interface for the response of the API call to unsubscribe by email from all lists
+ * @interface UnsubscribeByEmailFromAllListsResponse
+ * @memberof ListSubscribers
+ */
+export interface UnsubscribeByEmailFromAllListsResponse {
+	status: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to delete by email
+ * @interface DeleteByEmailParams
+ * @memberof ListSubscribers
+ */
+export interface DeleteByEmailParams {
+	listUid: string;
+	email: string;
+}
+
+/**
+ * @description Interface for the response of the API call to delete by email
+ * @interface DeleteByEmailResponse
+ * @memberof ListSubscribers
+ */
+export interface DeleteByEmailResponse {
+	status: string;
+}
+
+/**
+ * @description Interface for the parameters of the API call to create or update a subscriber
+ * @interface CreateOrUpdateSubscriberParams
+ * @memberof ListSubscribers
+ * @see https://api-docs.mailwizz.com/#create-or-update-a-subscriber
+ */
+export interface CreateOrUpdateSubscriberParams {
+	listUid: string;
+	data: CreateSubscriberParamsData;
+}
+
+/**
+ * @description Interface for the response of the API call to create or update a subscriber
+ * @interface CreateOrUpdateSubscriberResponse
+ * @memberof ListSubscribers
+ * @see https://api-docs.mailwizz.com/#create-or-update-a-subscriber
+ */
+export interface CreateOrUpdateSubscriberResponse {
+	status: string;
+	data: {
+		record: CreateSubscriberResponseRecord;
+	};
+}

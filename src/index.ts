@@ -4,6 +4,11 @@ import _Lists from "./Lists";
 import _ListSubscribers from "./ListSubscribers";
 import _Templates from "./Templates";
 import _TransactionEmail from "./TransactionEmail";
+import _ListFields from "./ListFields";
+import _ListSegments from "./ListSegments";
+import _CampaignTracking from "./CampaignTracking";
+import _CampaignBounces from "./CampaignBounces";
+import _Customers from "./Customers";
 
 /**
  * Classes
@@ -14,6 +19,11 @@ export const Lists = _Lists;
 export const ListSubscribers = _ListSubscribers;
 export const Templates = _Templates;
 export const TransactionEmail = _TransactionEmail;
+export const ListFields = _ListFields;
+export const ListSegments = _ListSegments;
+export const CampaignTracking = _CampaignTracking;
+export const CampaignBounces = _CampaignBounces;
+export const Customers = _Customers;
 
 /**
  * Config type
@@ -26,7 +36,29 @@ export { Config } from "./types/Config";
 export {
 	CreateCampaignParams,
 	CreateCampaignType,
-	CreateCampaignResponse
+	CreateCampaignResponse,
+	GetCampaignsParams,
+	GetCampaignsResponse,
+	CampaignRecord,
+	CampaignGroup,
+	CampaignList,
+	CampaignSegment,
+	GetCampaignParams,
+	GetCampaignResponse,
+	CampaignDetailRecord,
+	UpdateCampaignParams,
+	UpdateCampaignResponse,
+	CopyCampaignParams,
+	CopyCampaignResponse,
+	PauseUnpauseCampaignParams,
+	PauseUnpauseCampaignResponse,
+	MarkSentCampaignParams,
+	MarkSentCampaignResponse,
+	DeleteCampaignParams,
+	DeleteCampaignResponse,
+	GetCampaignStatsParams,
+	GetCampaignStatsResponse,
+	CampaignStats
 } from "./types/Campaigns";
 
 /**
@@ -97,7 +129,23 @@ export {
 	DeleteSubscriberParams,
 	DeleteSubscriberResponse,
 	UnsubscribeSubscriberParams,
-	UnsubscribeSubscriberResponse
+	UnsubscribeSubscriberResponse,
+	SearchByEmailInAllListsParams,
+	SearchByEmailInAllListsResponse,
+	SearchByEmailInAllListsRecord,
+	SearchByCustomFieldsParams,
+	SearchByCustomFieldsResponse,
+	BulkSubscribersParams,
+	BulkSubscribersResponse,
+	BulkSubscriberRecord,
+	UnsubscribeByEmailParams,
+	UnsubscribeByEmailResponse,
+	UnsubscribeByEmailFromAllListsParams,
+	UnsubscribeByEmailFromAllListsResponse,
+	DeleteByEmailParams,
+	DeleteByEmailResponse,
+	CreateOrUpdateSubscriberParams,
+	CreateOrUpdateSubscriberResponse
 } from "./types/ListSubscribers";
 
 /**
@@ -109,7 +157,14 @@ export {
 	GetAllTemplatesResponseRecord,
 	GetTemplateParams,
 	GetTemplateResponse,
-	GetTemplateResponseRecord
+	GetTemplateResponseRecord,
+	SearchTemplatesParams,
+	CreateTemplateParams,
+	CreateTemplateResponse,
+	UpdateTemplateParams,
+	UpdateTemplateResponse,
+	DeleteTemplateParams,
+	DeleteTemplateResponse
 } from "./types/Templates";
 
 /**
@@ -117,5 +172,92 @@ export {
  */
 export {
 	CreateTransactionalEmailParams,
-	CreateTransactionalEmailResponse
+	CreateTransactionalEmailResponse,
+	GetAllTransactionalEmailsParams,
+	GetAllTransactionalEmailsResponse,
+	TransactionalEmailRecord,
+	GetTransactionalEmailParams,
+	GetTransactionalEmailResponse,
+	TransactionalEmailDetailRecord,
+	DeleteTransactionalEmailParams,
+	DeleteTransactionalEmailResponse
 } from "./types/TransactionEmail";
+
+/**
+ * List Fields API types
+ */
+export {
+	GetFieldsParams,
+	GetFieldsResponse,
+	FieldRecord,
+	FieldType,
+	GetFieldParams,
+	GetFieldResponse,
+	CreateFieldParams,
+	CreateFieldResponse,
+	UpdateFieldParams,
+	UpdateFieldResponse,
+	DeleteFieldParams,
+	DeleteFieldResponse,
+	GetFieldTypesResponse,
+	FieldTypeRecord
+} from "./types/ListFields";
+
+/**
+ * List Segments API types
+ */
+export {
+	GetSegmentsParams,
+	GetSegmentsResponse,
+	SegmentRecord,
+	GetSegmentParams,
+	GetSegmentResponse,
+	SegmentDetailRecord,
+	SegmentCondition,
+	GetSegmentSubscribersParams,
+	GetSegmentSubscribersResponse,
+	SegmentSubscriberRecord,
+	CreateSegmentParams,
+	CreateSegmentCondition,
+	CreateSegmentResponse,
+	UpdateSegmentParams,
+	UpdateSegmentResponse,
+	DeleteSegmentParams,
+	DeleteSegmentResponse,
+	GetConditionOperatorsResponse,
+	ConditionOperatorRecord
+} from "./types/ListSegments";
+
+/**
+ * Campaign Tracking API types
+ */
+export {
+	TrackOpenParams,
+	TrackOpenResponse,
+	TrackClickParams,
+	TrackClickResponse,
+	TrackUnsubscribeParams,
+	TrackUnsubscribeResponse
+} from "./types/CampaignTracking";
+
+/**
+ * Campaign Bounces API types
+ */
+export {
+	GetBouncesParams,
+	GetBouncesResponse,
+	BounceRecord,
+	BounceSubscriber,
+	BounceType,
+	CreateBounceParams,
+	CreateBounceResponse
+} from "./types/CampaignBounces";
+
+/**
+ * Customers API types
+ */
+export {
+	CreateCustomerParams,
+	CustomerCompany,
+	CreateCustomerResponse
+} from "./types/Customers";

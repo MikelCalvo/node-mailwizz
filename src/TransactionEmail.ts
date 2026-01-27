@@ -86,6 +86,7 @@ class TransactionEmail extends Request {
 	 * @param {number} [params.per_page] - Items per page
 	 * @returns {Promise<GetAllTransactionalEmailsResponse>} - Promise of the response
 	 * @memberof TransactionEmail
+	 * @see https://api-docs.mailwizz.com/#get-all-transactional-emails
 	 */
 	getAll({
 		page,
@@ -107,6 +108,7 @@ class TransactionEmail extends Request {
 	 * @param {string} params.emailUid - Email UID
 	 * @returns {Promise<GetTransactionalEmailResponse>} - Promise of the response
 	 * @memberof TransactionEmail
+	 * @see https://api-docs.mailwizz.com/#get-one-transactional-email
 	 */
 	getOne({
 		emailUid
@@ -124,6 +126,7 @@ class TransactionEmail extends Request {
 	 * @param {string} params.emailUid - Email UID
 	 * @returns {Promise<DeleteTransactionalEmailResponse>} - Promise of the response
 	 * @memberof TransactionEmail
+	 * @see https://api-docs.mailwizz.com/#delete-a-transactional-email
 	 */
 	delete({
 		emailUid
