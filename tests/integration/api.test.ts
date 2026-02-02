@@ -11,6 +11,7 @@ import ListFields from "../../src/ListFields";
 import ListSegments from "../../src/ListSegments";
 import CampaignBounces from "../../src/CampaignBounces";
 import TransactionEmail from "../../src/TransactionEmail";
+import Templates from "../../src/Templates";
 import Customers from "../../src/Customers";
 
 /**
@@ -181,7 +182,7 @@ describe("API Integration Tests", () => {
 			mock.onPost(/\/campaigns\/[\w]+\/bounces/).reply(config => {
 				expect(config.data).toContain("bounce_type=hard");
 				expect(config.data).toContain("subscriber_uid=sub123");
-				expect(config.data).toContain("message=Mailbox%20not%20found"); // %20 = space
+				expect(config.data).toContain("message=Mailbox+not+found"); // + = space
 				return [200, mockResponses.created("bounce123")];
 			});
 
@@ -200,7 +201,7 @@ describe("API Integration Tests", () => {
 			mock.onPost(/\/lists\/[\w]+\/fields/).reply(config => {
 				// type must be { identifier: "text" }, not just "text"
 				expect(config.data).toContain("field%5Btype%5D%5Bidentifier%5D=text");
-				expect(config.data).toContain("field%5Blabel%5D=First%20Name"); // %20 = space
+				expect(config.data).toContain("field%5Blabel%5D=First+Name"); // + = space
 				expect(config.data).toContain("field%5Btag%5D=FNAME");
 				return [200, mockResponses.created("field123")];
 			});
@@ -239,6 +240,69 @@ describe("API Integration Tests", () => {
 				name: "Active",
 				operatorMatch: "any",
 				conditions: [{ field_id: "status", operator: "is", value: "active" }]
+			});
+		});
+	});
+
+	describe("Templates", () => {
+		it("create base64-encodes content field", async () => {
+			mock.onPost(/\/templates$/).reply(config => {
+				const contentMatch = config.data.match(
+					/template%5Bcontent%5D=([^&]+)/
+				);
+				const decodedContent = Buffer.from(
+					decodeURIComponent(contentMatch![1]),
+					"base64"
+				).toString();
+				expect(decodedContent).toBe("<html>Test</html>");
+				expect(config.data).toContain("template%5Bname%5D=My+Template");
+				return [200, { status: "success", template_uid: "tpl123" }];
+			});
+
+			const templates = new Templates(TEST_CONFIG);
+			await templates.create({
+				name: "My Template",
+				content: "<html>Test</html>"
+			});
+		});
+
+		it("update base64-encodes content field when provided", async () => {
+			mock.onPut(/\/templates\/[\w]+$/).reply(config => {
+				const contentMatch = config.data.match(
+					/template%5Bcontent%5D=([^&]+)/
+				);
+				const decodedContent = Buffer.from(
+					decodeURIComponent(contentMatch![1]),
+					"base64"
+				).toString();
+				expect(decodedContent).toBe("<html>Updated</html>");
+				return [
+					200,
+					{ status: "success", data: { record: { template_uid: "tpl123" } } }
+				];
+			});
+
+			const templates = new Templates(TEST_CONFIG);
+			await templates.update({
+				templateUid: "tpl123",
+				content: "<html>Updated</html>"
+			});
+		});
+
+		it("update without content does not include content field", async () => {
+			mock.onPut(/\/templates\/[\w]+$/).reply(config => {
+				expect(config.data).toContain("template%5Bname%5D=Renamed");
+				expect(config.data).not.toContain("content");
+				return [
+					200,
+					{ status: "success", data: { record: { template_uid: "tpl123" } } }
+				];
+			});
+
+			const templates = new Templates(TEST_CONFIG);
+			await templates.update({
+				templateUid: "tpl123",
+				name: "Renamed"
 			});
 		});
 	});

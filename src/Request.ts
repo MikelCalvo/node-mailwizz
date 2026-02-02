@@ -50,7 +50,10 @@ class Request {
 		if (this.method === METHOD.GET) {
 			options.params = this.query;
 		} else {
-			options.data = qs.stringify(this.data);
+			// Use serialize() instead of qs.stringify() to match signature format
+			// The signature is computed using serialize() which encodes spaces as '+'
+			// Using qs.stringify() would encode spaces as '%20', causing signature mismatch
+			options.data = serialize(this.data);
 			options.headers = {
 				...options.headers,
 				"Content-Type": "application/x-www-form-urlencoded"

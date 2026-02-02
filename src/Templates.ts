@@ -1,5 +1,6 @@
 import Request from "./Request";
 import { Config } from "./types/Config";
+import { base64Encode } from "./utils/encrypt";
 import {
 	GetAllTemplatesParams,
 	GetAllTemplatesResponse,
@@ -116,7 +117,7 @@ class Templates extends Request {
 	}: CreateTemplateParams): Promise<CreateTemplateResponse> {
 		const data: Record<string, any> = {
 			name: name,
-			content: content
+			content: base64Encode(content) // MailWizz requires base64 encoded content
 		};
 
 		if (inlineCss) data.inline_css = inlineCss;
@@ -151,7 +152,7 @@ class Templates extends Request {
 		const data: Record<string, any> = {};
 
 		if (name) data.name = name;
-		if (content) data.content = content;
+		if (content) data.content = base64Encode(content); // MailWizz requires base64 encoded content
 		if (inlineCss) data.inline_css = inlineCss;
 		if (minify) data.minify = minify;
 
