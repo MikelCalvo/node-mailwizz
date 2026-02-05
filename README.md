@@ -109,6 +109,7 @@ campaigns
 | `TransactionEmail` | Transactional emails |
 | `Countries` | Countries and zones |
 | `Customers` | Customer management |
+| `Health` | Lightweight ping (read-only) |
 
 For detailed documentation and all available methods, see the **[API Documentation](https://mikelcalvo.github.io/node-mailwizz/)**.
 

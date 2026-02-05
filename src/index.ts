@@ -9,6 +9,7 @@ import _ListSegments from "./ListSegments";
 import _CampaignTracking from "./CampaignTracking";
 import _CampaignBounces from "./CampaignBounces";
 import _Customers from "./Customers";
+import _Health from "./Health";
 
 /**
  * Classes
@@ -24,11 +25,13 @@ export const ListSegments = _ListSegments;
 export const CampaignTracking = _CampaignTracking;
 export const CampaignBounces = _CampaignBounces;
 export const Customers = _Customers;
+export const Health = _Health;
 
 /**
  * Config type
  */
 export { Config } from "./types/Config";
+export { HealthPingResponse } from "./types/Health";
 
 /**
  * Campaigns API types
