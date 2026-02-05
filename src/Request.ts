@@ -1,8 +1,6 @@
 import METHOD from "./utils/data";
-import { stringify } from "querystring";
 import { ksort, serialize, hmac_sha } from "./utils/encrypt";
 import axios, { AxiosRequestConfig } from "axios";
-import qs from "qs";
 import { Config } from "./types/Config";
 
 class Request {
@@ -20,11 +18,7 @@ class Request {
 		this.method = null;
 		this.data = {};
 		this.query = {};
-		this.header = {
-			"X-MW-PUBLIC-KEY": publicKey,
-			"X-MW-TIMESTAMP": Math.floor(Date.now() / 1000).toString(),
-			"X-MW-REMOTE-ADDR": ""
-		};
+		this.header = this.__buildHeaders();
 		this.axiosInstance = axios.create({ baseURL: baseUrl });
 	}
 
@@ -33,6 +27,7 @@ class Request {
 	}
 
 	async send(): Promise<any> {
+		this.__resetHeaders();
 		if (this.data instanceof Object && this.method === METHOD.GET) {
 			this.query = this.data;
 			this.data = {};
@@ -49,6 +44,8 @@ class Request {
 
 		if (this.method === METHOD.GET) {
 			options.params = this.query;
+			options.paramsSerializer = (params: Record<string, any>) =>
+				serialize(params);
 		} else {
 			// Use serialize() instead of qs.stringify() to match signature format
 			// The signature is computed using serialize() which encodes spaces as '+'
@@ -74,6 +71,18 @@ class Request {
 		this.header["X-HTTP-Method-Override"] = this.method;
 	}
 
+	private __buildHeaders(): Record<string, string> {
+		return {
+			"X-MW-PUBLIC-KEY": this.config.publicKey,
+			"X-MW-TIMESTAMP": Math.floor(Date.now() / 1000).toString(),
+			"X-MW-REMOTE-ADDR": ""
+		};
+	}
+
+	private __resetHeaders(): void {
+		this.header = this.__buildHeaders();
+	}
+
 	__sign(): void {
 		const {
 			header,
@@ -92,7 +101,7 @@ class Request {
 		let separator = "?";
 
 		if (method === METHOD.GET && Object.keys(paramGet).length > 0) {
-			apiUrl += "?" + stringify(paramGet);
+			apiUrl += "?" + serialize(paramGet);
 			separator = "&";
 		}
 

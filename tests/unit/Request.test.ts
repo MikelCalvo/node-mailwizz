@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import Request from "../../src/Request";
+import { hmac_sha, ksort, serialize } from "../../src/utils/encrypt";
 import { TEST_CONFIG } from "../helpers/setup";
 
 describe("Request", () => {
@@ -79,6 +80,53 @@ describe("Request", () => {
 			request.method = Request.Type.GET;
 			request.url = "/test";
 			request.data = {};
+
+			await request.send();
+		});
+
+		it("refreshes timestamp header on each send", async () => {
+			const timestamps: string[] = [];
+			mock.onGet(/.*/).reply(config => {
+				timestamps.push(config.headers?.["X-MW-TIMESTAMP"]);
+				return [200, { status: "success" }];
+			});
+
+			const request = new Request(TEST_CONFIG);
+			request.method = Request.Type.GET;
+			request.url = "/test";
+			request.data = {};
+
+			await request.send();
+			vi.advanceTimersByTime(2000);
+			await request.send();
+
+			expect(Number(timestamps[1])).toBeGreaterThan(Number(timestamps[0]));
+		});
+
+		it("serializes GET params consistently with signature format", async () => {
+			mock.onGet(/.*/).reply(config => {
+				const headers = {
+					"X-MW-PUBLIC-KEY": TEST_CONFIG.publicKey,
+					"X-MW-TIMESTAMP": Math.floor(Date.now() / 1000).toString(),
+					"X-MW-REMOTE-ADDR": ""
+				};
+				const params = ksort({ ...headers });
+				const apiUrl = `${TEST_CONFIG.baseUrl}/test?${serialize({
+					q: "hola mundo"
+				})}`;
+				const signatureString = `GET ${apiUrl}&${serialize(params)}`;
+				const expectedSignature = hmac_sha(
+					TEST_CONFIG.secret,
+					signatureString
+				);
+				expect(config.headers?.["X-MW-SIGNATURE"]).toBe(expectedSignature);
+				return [200, { status: "success" }];
+			});
+
+			const request = new Request(TEST_CONFIG);
+			request.method = Request.Type.GET;
+			request.url = "/test";
+			request.data = { q: "hola mundo" };
 
 			await request.send();
 		});
