@@ -11,15 +11,30 @@ class Request {
 	private query: Record<string, any>;
 	private header: Record<string, any>;
 	private axiosInstance: any;
+	private extraHeaders: Record<string, any>;
 
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		this.config = { publicKey, secret, baseUrl };
+	constructor({ publicKey, secret, baseUrl, timeout, userAgent }: Config) {
+		const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
+		this.config = {
+			publicKey,
+			secret,
+			baseUrl: normalizedBaseUrl,
+			timeout,
+			userAgent
+		};
 		this.url = null;
 		this.method = null;
 		this.data = {};
 		this.query = {};
 		this.header = this.__buildHeaders();
-		this.axiosInstance = axios.create({ baseURL: baseUrl });
+		this.extraHeaders = {};
+		if (userAgent) {
+			this.extraHeaders["User-Agent"] = userAgent;
+		}
+		this.axiosInstance = axios.create({
+			baseURL: normalizedBaseUrl,
+			timeout
+		});
 	}
 
 	static get Type(): typeof METHOD {
@@ -39,7 +54,10 @@ class Request {
 		const options: AxiosRequestConfig = {
 			method: this.method || "GET",
 			url: this.url || "",
-			headers: this.header
+			headers: {
+				...this.header,
+				...this.extraHeaders
+			}
 		};
 
 		if (this.method === METHOD.GET) {

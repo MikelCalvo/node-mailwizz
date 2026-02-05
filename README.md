@@ -24,7 +24,9 @@ npm install node-mailwizz --save
 const config = {
   publicKey: "yourPublicKey",
   secret: "yourSecretKey",
-  baseUrl: "https://your-mailwizz-instance.com/api"
+  baseUrl: "https://your-mailwizz-instance.com/api",
+  timeout: 15000,
+  userAgent: "LawActive-Mailer/1.0"
 };
 ```
 

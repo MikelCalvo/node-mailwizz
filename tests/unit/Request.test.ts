@@ -130,6 +130,58 @@ describe("Request", () => {
 
 			await request.send();
 		});
+
+		it("normalizes baseUrl trailing slash when signing", async () => {
+			mock.onGet(/.*/).reply(config => {
+				const headers = {
+					"X-MW-PUBLIC-KEY": TEST_CONFIG.publicKey,
+					"X-MW-TIMESTAMP": Math.floor(Date.now() / 1000).toString(),
+					"X-MW-REMOTE-ADDR": ""
+				};
+				const params = ksort({ ...headers });
+				const apiUrl = `https://api.example.com/api/test?${serialize({
+					q: "hola mundo"
+				})}`;
+				const signatureString = `GET ${apiUrl}&${serialize(params)}`;
+				const expectedSignature = hmac_sha(
+					TEST_CONFIG.secret,
+					signatureString
+				);
+				expect(config.headers?.["X-MW-SIGNATURE"]).toBe(expectedSignature);
+				return [200, { status: "success" }];
+			});
+
+			const request = new Request({
+				...TEST_CONFIG,
+				baseUrl: "https://api.example.com/api/"
+			});
+			request.method = Request.Type.GET;
+			request.url = "/test";
+			request.data = { q: "hola mundo" };
+
+			await request.send();
+		});
+	});
+
+	describe("Config extras", () => {
+		it("adds custom User-Agent and timeout", async () => {
+			mock.onGet(/.*/).reply(config => {
+				expect(config.headers?.["User-Agent"]).toBe("TestAgent/1.0");
+				expect(config.timeout).toBe(12345);
+				return [200, { status: "success" }];
+			});
+
+			const request = new Request({
+				...TEST_CONFIG,
+				userAgent: "TestAgent/1.0",
+				timeout: 12345
+			});
+			request.method = Request.Type.GET;
+			request.url = "/test";
+			request.data = {};
+
+			await request.send();
+		});
 	});
 
 	describe("Error handling", () => {
