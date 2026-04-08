@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -24,10 +24,5 @@ jobs:
 
       - run: npm ci
 
-      - name: Run tests
-        if: matrix.node-version == '18.x'
-        run: npm test
-
       - name: Run tests with coverage
-        if: matrix.node-version != '18.x'
         run: npm run test:coverage
