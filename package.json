@@ -1,6 +1,6 @@
 {
 	"name": "node-mailwizz",
-	"version": "2.1.6",
+	"version": "2.1.7",
 	"description": "MailWizz implementation",
 	"author": "Mikel Calvo <contact@mikecalvo.net> (www.mikelcalvo.net)",
 	"keywords": ["mailwizz-api", "mailwizz", "mailwizz-node", "mailwizz-nodejs"],
@@ -29,15 +29,15 @@
 		"provenance": true
 	},
 	"dependencies": {
-		"axios": "1.18.1"
+		"axios": "1.20.0"
 	},
 	"devDependencies": {
 		"@types/express": "5.0.6",
-		"@types/node": "26.0.0",
-		"@vitest/coverage-v8": "^4.1.9",
+		"@types/node": "26.6.5",
+		"@vitest/coverage-v8": "^4.1.12",
 		"axios-mock-adapter": "^2.1.0",
-		"prettier": "3.8.4",
+		"prettier": "3.9.10",
 		"typescript": "^6.0.3",
-		"vitest": "^4.1.9"
+		"vitest": "^4.1.12"
 	}
 }

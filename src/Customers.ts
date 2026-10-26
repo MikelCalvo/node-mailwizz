@@ -13,12 +13,8 @@ class Customers extends Request {
 	 * @see https://api-docs.mailwizz.com/#customers
 	 * @memberof Customers
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

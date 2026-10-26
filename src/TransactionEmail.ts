@@ -20,12 +20,8 @@ class TransactionEmail extends Request {
 	 * @see https://api-docs.mailwizz.com/#transactional-emails
 	 * @memberof TransactionEmail
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**
