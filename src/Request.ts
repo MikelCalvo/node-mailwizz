@@ -14,7 +14,11 @@ class Request {
 	private extraHeaders: Record<string, any>;
 
 	constructor({ publicKey, secret, baseUrl, timeout, userAgent }: Config) {
-		const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
+		let baseUrlEnd = baseUrl.length;
+		while (baseUrlEnd > 0 && baseUrl.charCodeAt(baseUrlEnd - 1) === 47) {
+			baseUrlEnd--;
+		}
+		const normalizedBaseUrl = baseUrl.slice(0, baseUrlEnd);
 		this.config = {
 			publicKey,
 			secret,

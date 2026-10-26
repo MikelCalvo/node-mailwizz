@@ -115,10 +115,7 @@ describe("Request", () => {
 					q: "hola mundo"
 				})}`;
 				const signatureString = `GET ${apiUrl}&${serialize(params)}`;
-				const expectedSignature = hmac_sha(
-					TEST_CONFIG.secret,
-					signatureString
-				);
+				const expectedSignature = hmac_sha(TEST_CONFIG.secret, signatureString);
 				expect(config.headers?.["X-MW-SIGNATURE"]).toBe(expectedSignature);
 				return [200, { status: "success" }];
 			});
@@ -143,10 +140,7 @@ describe("Request", () => {
 					q: "hola mundo"
 				})}`;
 				const signatureString = `GET ${apiUrl}&${serialize(params)}`;
-				const expectedSignature = hmac_sha(
-					TEST_CONFIG.secret,
-					signatureString
-				);
+				const expectedSignature = hmac_sha(TEST_CONFIG.secret, signatureString);
 				expect(config.headers?.["X-MW-SIGNATURE"]).toBe(expectedSignature);
 				return [200, { status: "success" }];
 			});
@@ -160,6 +154,29 @@ describe("Request", () => {
 			request.data = { q: "hola mundo" };
 
 			await request.send();
+		});
+	});
+
+	describe("Base URL normalization", () => {
+		it.each([
+			["https://api.example.com/api", "https://api.example.com/api"],
+			["https://api.example.com/api///", "https://api.example.com/api"],
+			[
+				`https://api.example.com/${"/".repeat(100000)}path///`,
+				`https://api.example.com/${"/".repeat(100000)}path`
+			],
+			["/".repeat(100000), ""],
+			["", ""]
+		])("strips only trailing slashes (case %#)", async (baseUrl, expected) => {
+			mock.onGet("/test").reply(200, { status: "success" });
+			const request = new Request({ ...TEST_CONFIG, baseUrl });
+			request.method = Request.Type.GET;
+			request.url = "/test";
+
+			await request.send();
+
+			expect(mock.history.get).toHaveLength(1);
+			expect(mock.history.get[0].baseURL).toBe(expected);
 		});
 	});
 
