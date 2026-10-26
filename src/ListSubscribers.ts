@@ -37,12 +37,8 @@ class ListSubscribers extends Request {
 	 * @see https://api-docs.mailwizz.com/#subscribers
 	 * @memberof ListSubscribers
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

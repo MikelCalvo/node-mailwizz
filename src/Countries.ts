@@ -15,12 +15,8 @@ class Countries extends Request {
 	 * @see https://api-docs.mailwizz.com/#countries
 	 * @memberof Countries
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

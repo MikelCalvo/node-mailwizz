@@ -23,12 +23,8 @@ class Lists extends Request {
 	 * @memberof Lists
 	 * @see https://api-docs.mailwizz.com/#lists
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

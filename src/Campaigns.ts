@@ -30,12 +30,8 @@ class Campaigns extends Request {
 	 * @memberof Campaigns
 	 * @see https://api-docs.mailwizz.com/#campaigns
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

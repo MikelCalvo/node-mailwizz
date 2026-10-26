@@ -9,12 +9,8 @@ class Health extends Request {
 	 * @description Creates an instance of Health.
 	 * @memberof Health
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**

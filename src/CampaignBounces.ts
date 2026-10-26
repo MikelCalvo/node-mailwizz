@@ -13,12 +13,8 @@ class CampaignBounces extends Request {
 	 * @see https://api-docs.mailwizz.com/#campaigns-bounces
 	 * @memberof CampaignBounces
 	 */
-	constructor({ publicKey, secret, baseUrl }: Config) {
-		super({
-			publicKey: publicKey,
-			secret: secret,
-			baseUrl: baseUrl
-		});
+	constructor(config: Config) {
+		super(config);
 	}
 
 	/**
